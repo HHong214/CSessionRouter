@@ -6,7 +6,7 @@ Read this at the start of a job. It is used then, for recall and waiting proposa
 
 DATA is `~/.session-router/` (Windows: `%USERPROFILE%\.session-router\`). It sits outside the plugin, so that a plugin update never wipes what was learned, and outside `~/.claude`, where Claude Code refuses or questions every write. If a write to DATA is refused, or the user is asked each time, tell them once that a permission rule for that folder stops it (the README gives the rule). Do not change their settings yourself. The folder keeps its older name, `session-router`, so that what was learned stays where it is.
 
-Read and write DATA with the Read, Write and Edit tools, and list its folders with Glob, never with shell commands. A permission rule for DATA covers those tools only, so a refused shell command says nothing about whether DATA can be used.
+Read and write DATA with the Read, Write and Edit tools, and list its folders with Glob, never with shell commands. One exception: a byte-exact copy of a file inside DATA (a backup, or a copy kept before a tidy-up) is made with one plain copy command, because the Write tool cannot copy a file exactly; the report says so. A permission rule for DATA covers those tools only, so a refused shell command says nothing about whether DATA can be used.
 
 ```
 DATA/

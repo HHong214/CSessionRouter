@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2 - 2026-11-24
+
+- An exact copy of a file in the router's data folder (a backup, or a copy kept before a tidy-up) may be made with one copy command, because the Write tool cannot copy a file exactly. (proposal `20261124-data-copy-by-command`)
+
 ## 1.2.1 - 2026-11-24
 
 - The commit after an accepted task now adds the task's files first. A commit by path alone fails on files git does not know yet, so a task that made a new file could not be committed as the rule was written.
