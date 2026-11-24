@@ -43,4 +43,4 @@ The same steps fit code, research, writing, analysis and reverse engineering. Gi
 End with:
 
 - the `Saved or changed:` list (memory.md), or `Saved or changed: nothing`;
-- one line saying the plan can be carried out with `/session-router:route`.
+- one line saying the plan can be carried out with `/CSessionRouter:route`.

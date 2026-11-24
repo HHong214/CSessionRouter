@@ -46,7 +46,7 @@ So a brief does not repeat them. Every worker:
 - loads the skills the brief names before starting;
 - stops with `NEEDS-DECISION:` (the question, the options, its pick) when something it depends on is unclear and reading or running cannot settle it;
 - returns `ESCALATE:` (why, and what it tried) when the task is beyond it at this level after a real attempt;
-- reports its steps to the panel when `mcp__CPixelCrew__step` is among its tools;
+- reports its steps to the agents panel when a tool for a subagent's own steps (it takes `done`, `total`, `note`) is among its tools;
 - never starts other agents;
 - runs the verification you asked for and pastes the tail of the real output, trying the plain form of a refused command before giving up.
 

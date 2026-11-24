@@ -4,7 +4,7 @@ Read this at the start of a job, for recall and waiting proposals, and again at 
 
 ## Where things live
 
-DATA is `~/.session-router/` (Windows: `%USERPROFILE%\.session-router\`). It sits outside the plugin, so that a plugin update never wipes what was learned, and outside `~/.claude`, where Claude Code refuses or questions every write. If a write to DATA is refused, or the user is asked each time, tell them once that a permission rule for that folder stops it (the README gives the rule). Do not change their settings yourself.
+DATA is `~/.session-router/` (Windows: `%USERPROFILE%\.session-router\`). It sits outside the plugin, so that a plugin update never wipes what was learned, and outside `~/.claude`, where Claude Code refuses or questions every write. If a write to DATA is refused, or the user is asked each time, tell them once that a permission rule for that folder stops it (the README gives the rule). Do not change their settings yourself. The folder keeps its older name, `session-router`, so that what was learned stays where it is.
 
 Read and write DATA with the Read, Write and Edit tools, and list its folders with Glob, never with shell commands. A permission rule for DATA covers those tools only, so a refused shell command says nothing about whether DATA can be used.
 
@@ -19,6 +19,7 @@ DATA/
   jobs/<project-slug>/<YYYY-MM-DD>-<short-title>/PLAN.md, PROGRESS.md
   improvements/pending/ | applied/ | rejected/
   backups/<version>/      plugin files as they were before an applied change
+  config.md               the path of the plugin's clone: a line `clone: <path>` (improve.md)
   CHANGELOG.md
 ```
 

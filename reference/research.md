@@ -2,7 +2,7 @@
 
 How to find, read and check sources. Two callers use this file:
 
-- `/session-router:research`, for any topic, not only code. Its skill gives the order of the steps.
+- `/CSessionRouter:research`, for any topic, not only code. Its skill gives the order of the steps.
 - Planning step 3 (`planning.md`), which sets its own depth and puts its comparison in the plan.
 
 Both use every section here except Answer, which is for the research command.
@@ -50,7 +50,7 @@ Facts that depend on a version are never taken from your own memory or a searche
 ## Searchers
 
 - Split the topic into angles that do not overlap, one searcher per angle.
-- Searchers are `session-router:reader` shells on Haiku (Sonnet for dense technical reading) at `low` or `medium`. The Agent call form, parallel starts and moving up are in `routing.md`.
+- Searchers are `CSessionRouter:reader` shells on Haiku (Sonnet for dense technical reading) at `low` or `medium`. The Agent call form, parallel starts and moving up are in `routing.md`.
 - Each brief gives: the objective; where to look first; what to return; its limits (the tool-call budget for the depth, what is out of scope).
 - On deep research, run the searchers in waves (Depth): start one wave in one message, read its results, then brief the next.
 

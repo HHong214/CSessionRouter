@@ -26,12 +26,12 @@ The change under review is someone else's code, so:
 - If improvement proposals are waiting, say so in one line (`memory.md`).
 - Make the panel calls `panel.md` lists for `review`.
 - The target is the argument: a commit range, a PR or named paths. With no argument, it is the current diff (uncommitted and staged changes).
-- Send a cheap reader (`session-router:reader` on Haiku) to scope it. It returns the files in scope with their size, grouped by area, the stated intent from commit messages or the PR description, and whether any of it is risky code as `checks.md` defines it. For a PR, it fetches the diff with `gh pr diff` (Safety).
+- Send a cheap reader (`CSessionRouter:reader` on Haiku) to scope it. It returns the files in scope with their size, grouped by area, the stated intent from commit messages or the PR description, and whether any of it is risky code as `checks.md` defines it. For a PR, it fetches the diff with `gh pr diff` (Safety).
 - Add the intent the user gave in this conversation. If the scope is empty, or the intent cannot be found and it changes what counts as wrong, ask the user before starting reviewers.
 
 ## 2. Choose the reviewers
 
-- Reviewers are `session-router:reader` shells.
+- Reviewers are `CSessionRouter:reader` shells.
 - By default: Opus at `high`.
 - A small diff (about 200 changed lines or fewer, and not risky): Sonnet at `high`.
 - Risky code (as `checks.md` defines it): Fable at `high`.
@@ -54,7 +54,7 @@ Give the reviewers the code and the intent, not your own view of the change: a r
 A finding is a claim. Confirm each one yourself, as `checks.md` describes, before it goes in the report:
 
 1. Read the cited code and walk through the failure scenario: does that input reach that code and fail as described?
-2. Where one command settles it, run it, unless it runs code from the change: then ask first (Safety). Where it needs more, send a cheap reader to check that one finding. When a reviewer says tests need running, a worker (`session-router:worker`) runs them, once the user has agreed (Safety).
+2. Where one command settles it, run it, unless it runs code from the change: then ask first (Safety). Where it needs more, send a cheap reader to check that one finding. When a reviewer says tests need running, a worker (`CSessionRouter:worker`) runs them, once the user has agreed (Safety).
 3. Mark it confirmed or not. Adjust its severity if the evidence supports a different one.
 
 A review that is shallow or misses cases is returned or moved up as `routing.md` says.

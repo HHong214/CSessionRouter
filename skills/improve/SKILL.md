@@ -1,6 +1,6 @@
 ---
 name: improve
-description: "Goes through the improvement proposals Session Router has written about its own skills and reference files, and applies, rejects or defers each one with the user's answer, keeping a backup and raising the plugin version for every applied change. With the argument undo, restores the newest backup. Use when the user says improve session router, review the router's proposals, apply the pending improvements, what has the router learned, or undo the last router change."
+description: "Goes through the improvement proposals CSessionRouter has written about its own skills and reference files, and applies, rejects or defers each one with the user's answer, keeping a backup, raising the plugin version and making one commit in the plugin's repository clone for every applied change. With the argument undo, restores the newest backup. Use when the user says improve CSessionRouter, review the router's proposals, apply the pending improvements, what has the router learned, or undo the last router change."
 argument-hint: "[undo]"
 ---
 
@@ -8,13 +8,13 @@ argument-hint: "[undo]"
 
 You go through the changes the router has proposed to this plugin's own files. Each one is the user's decision: nothing is applied, rejected or undone without their answer.
 
-Read `<base directory of this skill>/../../reference/improve.md` first: it holds the proposal format, the protected rules, where the plugin's files and backups are, and the apply and undo steps. `memory.md` in the same folder says where the data folder (DATA) is and how the notices look.
+Read `<base directory of this skill>/../../reference/improve.md` first: it holds the proposal format, the protected rules, where the plugin's clone and the backups are, and the apply and undo steps. The plugin's files are changed in a clone of its repository, never in the installed copy. `memory.md` in the same folder says where the data folder (DATA) is and how the notices look.
 
 If a reference file or a worker shell cannot be read because permission was refused, tell the user in one line which folder needs read access (the plugin folder, `<base directory of this skill>/../..`), and stop. Never carry on without the rules. A memory file in DATA that does not exist yet is normal on a first run and is not an error.
 
 ## 1. Find the files
 
-- Find DATA, the plugin folder and the current version as `improve.md` describes.
+- Find DATA, the clone of the plugin's repository and the current version as `improve.md` describes. If the clone's path is not saved, or is not the plugin's repository, ask for it as `improve.md` says.
 - Run the lost changes check in `improve.md`: name in one line any applied proposal whose After text is missing from its file, and apply nothing again without the user's answer.
 - If the argument is `undo`, go to section 4.
 
@@ -41,6 +41,6 @@ Follow the undo steps in `improve.md`, including what to do when a write is refu
 
 ## 5. Report
 
-- What was applied (file and new version), what was rejected and what was left for later; or, for undo, what was restored and which proposal moved to `rejected/`.
-- If anything changed, remind the user to reload plugins or start a new session.
+- What was applied (file, new version and commit), what was rejected and what was left for later; or, for undo, what was restored and which proposal moved to `rejected/`.
+- If a commit was made, ask once whether to push, as `improve.md` describes. Never push without the answer. After a push, remind the user that the change takes effect after `/plugin marketplace update csessionrouter` and `/reload-plugins`; without one, say it is committed in the clone only.
 - End with the `Saved or changed:` list (`memory.md`): proposals applied or rejected, backups made, files restored, version changes. With none: `Saved or changed: nothing`.

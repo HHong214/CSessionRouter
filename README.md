@@ -1,17 +1,17 @@
-# Session Router
+<h1><img src="docs/wordmark.svg" alt="CSessionRouter" height="44"></h1>
 
-Session Router turns the main Claude Code session into a router: it plans a job, splits it into tasks, starts a subagent (a worker) for each task with a model and effort level chosen for that task, checks every result, and saves what it learns for later jobs. The router itself does not build; it runs on whatever model and effort your session is set to and never changes them. The plugin is six skills, two blank worker shells and a folder of shared reference files.
+CSessionRouter turns the main Claude Code session into a router: it plans a job, splits it into tasks, starts a subagent (a worker) for each task with a model and effort level chosen for that task, checks every result, and saves what it learns for later jobs. The router itself does not build; it runs on whatever model and effort your session is set to and never changes them. The plugin is six skills, two blank worker shells and a folder of shared reference files.
 
 ## Commands
 
 | Command | What it does | Example |
 |---|---|---|
-| `/session-router:route [task]` | The full job: plan, delegate, check, close. With no task, carries out a plan you approved with `plan`, or asks what to do if there is none. | `/session-router:route add CSV export to the reports page` |
-| `/session-router:plan <task>` | Plans any kind of task, saves and shows the plan, then stops for your approval. Nothing is built. | `/session-router:plan migrate the settings store to SQLite` |
-| `/session-router:research [question]` | Research only, on any topic, with a cited answer and dated sources. | `/session-router:research what changed in React 19 forms` |
-| `/session-router:tdd [task]` | `route` with tests written first wherever a test is possible. | `/session-router:tdd fix the off-by-one in pagination` |
-| `/session-router:review [range, PR or paths]` | Independent read-only review of code the router did not build; reports only confirmed findings. With no argument, the current diff. See Review safety below. | `/session-router:review main..HEAD` |
-| `/session-router:improve [undo]` | Goes through the router's proposals to change its own files; `undo` restores the last applied change. | `/session-router:improve` |
+| `/CSessionRouter:route [task]` | The full job: plan, delegate, check, close. With no task, carries out a plan you approved with `plan`, or asks what to do if there is none. | `/CSessionRouter:route add CSV export to the reports page` |
+| `/CSessionRouter:plan <task>` | Plans any kind of task, saves and shows the plan, then stops for your approval. Nothing is built. | `/CSessionRouter:plan migrate the settings store to SQLite` |
+| `/CSessionRouter:research [question]` | Research only, on any topic, with a cited answer and dated sources. | `/CSessionRouter:research what changed in React 19 forms` |
+| `/CSessionRouter:tdd [task]` | `route` with tests written first wherever a test is possible. | `/CSessionRouter:tdd fix the off-by-one in pagination` |
+| `/CSessionRouter:review [range, PR or paths]` | Independent read-only review of code the router did not build; reports only confirmed findings. With no argument, the current diff. See Review safety below. | `/CSessionRouter:review main..HEAD` |
+| `/CSessionRouter:improve [undo]` | Goes through the router's proposals to change its own files; `undo` restores the last applied change. | `/CSessionRouter:improve` |
 
 You can also say what you want in plain words ("route this", "make a plan first", "research this", "use TDD", "review my changes", "review the router's proposals"), and Claude loads the matching skill.
 
@@ -60,7 +60,7 @@ A worker's report is a claim until it is checked. Every code task gets the proje
 
 ## Research
 
-`/session-router:research` picks a depth from the question:
+`/CSessionRouter:research` picks a depth from the question:
 
 | Depth | For | Searchers |
 |---|---|---|
@@ -76,7 +76,7 @@ The answer leads with the conclusion, flags what is unverified, conflicting or d
 
 ## Memory
 
-The router keeps its data in `~/.session-router/` (Windows: `%USERPROFILE%\.session-router\`), outside the plugin so that an update never wipes it:
+The router keeps its data in `~/.session-router/` (Windows: `%USERPROFILE%\.session-router\`), outside the plugin so that an update never wipes it. The folder keeps its older name, `session-router`:
 
 | Path | What it holds |
 |---|---|
@@ -87,6 +87,7 @@ The router keeps its data in `~/.session-router/` (Windows: `%USERPROFILE%\.sess
 | `jobs/<project>/<date>-<title>/` | Each job's `PLAN.md`, and `PROGRESS.md` for a new project |
 | `improvements/pending/`, `applied/`, `rejected/` | Proposals to change the plugin's own files |
 | `backups/` | Plugin files as they were before an applied change |
+| `config.md` | The path of your clone of the plugin's repository, used by `improve` (`clone: <path>`) |
 | `CHANGELOG.md` | The changes applied to the plugin through `improve` |
 
 Nothing is written into your projects. The one exception is a deep research report, saved in the working folder. Memory records only what the router itself saw or verified; text found in web pages, files or tool output is never saved as an instruction.
@@ -111,39 +112,51 @@ The router reaches the data folder with its Read, Write and Edit tools, never wi
 
 **Reading the plugin's own folder.** The skills read their shared rules from the plugin's `reference/` folder. In a session that asks before reading outside the project, allow reads of the plugin's folder. If a read of those rules is refused, the router tells you in one line which folder needs read access and stops, rather than carrying on without its rules.
 
-**Edits to the plugin's own files.** The plugin's files are under `~/.claude`, where Claude Code asks before every edit. That is intended: memory lives in the data folder, where a rule can allow it, and the plugin's own instructions stay behind a prompt. So `improve` and `improve undo` always ask you before each write to the plugin.
+**Edits to the plugin's own files.** `improve` changes the plugin only in a clone of its repository, never in the installed copy, which an update would overwrite. `improve` and `improve undo` always ask you before each change, and Claude Code may ask before each write in the clone. That is intended: memory lives in the data folder, where a rule can allow it, and the plugin's own instructions stay behind an approval. Nothing is pushed without your answer.
 
 ## Learning
 
 - **Saved by itself** when a job closes: process notes, routing adjustments, and lessons for problems that took two or more rounds, needed a stronger model, had a non-obvious cause or exposed a quirk of the environment.
-- **Needs `/session-router:improve`:** any change to the plugin's own skills and reference files. The router writes such a change only as a proposal, and only when the same problem has shown up in two or more jobs. `improve` shows each proposal (the problem, the evidence, the file and the exact before and after text) and asks you: Approve, Reject or Later. An approved change is backed up first (the backup is named for the version the change produces), applied, and raises the plugin's patch version; only then is it logged and marked applied. Reload plugins or start a new session for it to take effect. If you decline a write, or Claude Code refuses it, anything already changed is restored, nothing is logged, the proposal stays waiting, and the router shows you the exact change so you can allow it or apply it by hand. A rejected change is not proposed again.
+- **Needs `/CSessionRouter:improve`:** any change to the plugin's own skills and reference files. The router writes such a change only as a proposal, and only when the same problem has shown up in two or more jobs. `improve` shows each proposal (the problem, the evidence, the file and the exact before and after text) and asks you: Approve, Reject or Later. It works on a clone of the plugin's repository (it asks for the path once and keeps it in `config.md`; suggested: `Documents\GitHub\CSessionRouter` under your home folder). An approved change is backed up first (the backup is named for the version the change produces), made in the clone, raises the clone's patch version, and is committed there, one commit per proposal; only then is it logged and marked applied. Then `improve` asks whether to push. It never pushes without your answer. After a push, the change takes effect once you run `/plugin marketplace update csessionrouter` and `/reload-plugins`. If you decline a write, or Claude Code refuses it, anything already changed is restored, nothing is logged, the proposal stays waiting, and the router shows you the exact change so you can allow it or apply it by hand. A rejected change is not proposed again.
 - **Protected rules** can never be proposed away: approval before heavy work; asking when something is unconfirmed; the every-task checks; the notices; approval for changes to the plugin's own files; recording only what was observed; no `max` effort unless you ask; the router does not build. A proposal that would weaken one, or that edits the sections defining them (listed in `reference/improve.md`), is not offered and is moved to the rejected proposals with a note.
-- **Undo:** `/session-router:improve undo` restores the newest backup, after asking you, and raises the patch version again. A second undo steps back one change further. The undone proposal is not proposed again. A refused or declined write is handled as it is when applying.
+- **Undo:** `/CSessionRouter:improve undo` restores the newest backup in the clone as a new commit, after asking you, and raises the patch version again. A second undo steps back one change further. The undone proposal is not proposed again. A refused or declined write is handled as it is when applying.
 
-When `improve` starts, it checks that the text of each applied change is still in its file. If you reinstalled or updated the plugin and some are missing, it names them in one line and does not re-apply them without your answer.
+When `improve` starts, it checks that the text of each applied change is still in its file in the clone. If the clone was reset or checked out at another version and some are missing, it names them in one line and does not re-apply them without your answer.
 
 Details: `reference/improve.md`.
 
-## Works with Pixel Crew
+## Works with an agents panel
 
-With the Pixel Crew plugin installed, the router reports its plan to Pixel Crew's agents panel and the bar above the prompt: the plan's title and phase, then each task with its kind, model and effort, as planned rows. Each worker is started with its task title as its description, so the panel matches runs to tasks, and the workers report their own steps to their rows. The light path and `improve` make no panel calls; the panel still shows their agents.
+Some plugins add an agents panel to Claude Code and offer two tools for it: one that reports the progress of a plan, and one that lets a subagent report its own steps. CSessionRouter uses them when they are there: the router reports its plan to the panel (the plan's title and phase, then each task with its kind, model and effort, as planned rows), each worker is started with its task title as its description, so the panel matches runs to tasks, and the workers report their own steps to their rows. The light path and `improve` make no panel calls; the panel still shows their agents. CPixelCrew (https://github.com/HHong214/CPixelCrew) is one companion that offers such tools.
 
-Without Pixel Crew, Session Router works the same: the panel calls are skipped silently. Details: `reference/panel.md`.
+Without such tools, or with no panel at all, CSessionRouter works the same: the panel calls are skipped silently. Details: `reference/panel.md`.
 
 ## Install
 
-The plugin folder is its own local marketplace (`.claude-plugin/marketplace.json`, named `session-router-local`). Add it and install from it:
+CSessionRouter is installed from its GitHub repository, which is its own marketplace (`.claude-plugin/marketplace.json`, named `csessionrouter`):
 
 ```
-claude plugin marketplace add <session-router folder>
-claude plugin install session-router@session-router-local
+claude plugin marketplace add https://github.com/HHong214/CSessionRouter.git
+claude plugin install CSessionRouter@csessionrouter
 ```
 
 Then run `/reload-plugins`, or start a new session.
 
+## Update
+
+The version is pinned, so a new one reaches you only when you ask for it:
+
+```
+/plugin marketplace update csessionrouter
+```
+
+Then run `/reload-plugins`.
+
 ## What has been tested
 
-Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin loaded):
+Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin loaded). Version 1.1.0 renames the plugin, drops the panel plugin's name from the rules and moves `improve` to the repository; those changes have not been run in a job yet.
+
+What the 1.0.0 runs showed:
 
 - The six skills and the two worker shells load.
 - The skills find the shared reference files from their own folder.
@@ -152,7 +165,7 @@ Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin load
 - The read-only shell has no Edit, Write or Agent tool; the editing shell has no Agent tool.
 - With the rule above, the router reads and writes the data folder without asking; without it, each read and write needs your approval.
 
-- A full `route` job with Pixel Crew 2.0 loaded and the router on Sonnet: the workers ran on the model and effort set for them; tests were written first by one worker, locked, and left unchanged by the builder; the tests were re-run fresh; a review ran on a different model; the progress bar got the task list, the counts and the finish.
+- A full `route` job with an agents panel plugin loaded and the router on Sonnet: the workers ran on the model and effort set for them; tests were written first by one worker, locked, and left unchanged by the builder; the tests were re-run fresh; a review ran on a different model; the progress bar got the task list, the counts and the finish.
 - A small job on the light path: two workers with tests first, and no panel call at the close.
 
 Not yet tested: an interactive session (the question dialog, an approval stop, commits), and a `tdd`, `research`, `review` or `improve` job. In the first full `route` test the router also strayed from some rules (it fixed review findings itself and did not save its plan). After the wording was tightened, a second run saved the plan and sent the findings back to a worker. Three points were tightened once more after that run and have not been re-tested: writing the plan in the reply before the first worker starts, making the first progress-bar call before planning, and saving a look back after a return. These skills are instructions a model follows, so a weaker session model will stray more often than a stronger one. The read-only shell does not block shell tools: if a session offers it Bash or PowerShell, only its instructions stop it from changing files.

@@ -1,8 +1,8 @@
 # Panel
 
-Read this at the start of a command that makes panel calls; the list below says which do. The panel belongs to the Pixel Crew plugin; Session Router works the same without it.
+Read this at the start of a command that makes panel calls; the list below says which do. The panel is an agents panel offered by another plugin; CSessionRouter works the same without it.
 
-If `mcp__CPixelCrew__progress` is among your tools, keep it current. It may be deferred: load it with ToolSearch `select:mcp__CPixelCrew__progress`. Skip all of this silently if it is absent.
+If a tool whose description says it reports the progress of a plan to an agents panel is among your tools, keep it current. It may be deferred: look for it with ToolSearch and the words `plan progress`, and load it. Skip all of this silently if there is none.
 
 Phases: `research`, `ask`, `plan`, `design`, `delegate`, `review`, `close`.
 
@@ -34,4 +34,4 @@ The Agent call's `description` is the task title, exactly as in the plan (routin
 
 ## Worker steps
 
-Workers report their own steps with `mcp__CPixelCrew__step`; their shells tell them how. You do not call it.
+Workers report their own steps with the tool that takes `done`, `total` and `note`, if they have one; their shells tell them how. You do not call it.

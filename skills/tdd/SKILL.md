@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: "Runs the full Session Router job with tests written first wherever a test is possible: one worker writes failing tests from the done criteria, the tests are locked, a different worker builds until they pass, and someone other than the builder re-runs them before review. Use when the user says use TDD, test-driven, tests first, write the tests first, red green refactor, or fix this bug with a failing test first."
+description: "Runs the full CSessionRouter job with tests written first wherever a test is possible: one worker writes failing tests from the done criteria, the tests are locked, a different worker builds until they pass, and someone other than the builder re-runs them before review. Use when the user says use TDD, test-driven, tests first, write the tests first, red green refactor, or fix this bug with a failing test first."
 argument-hint: "[task]"
 ---
 

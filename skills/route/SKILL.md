@@ -1,12 +1,12 @@
 ---
 name: route
-description: "Runs a whole job as a router: plans it, splits it into tasks for worker subagents with a model and effort level chosen per task, checks every result, and saves what it learns for later jobs. Scales down to a quick hand-off for small tasks. Use when the user says route this, run this through the router, plan and delegate this, split this across agents, or carry out the plan made with /session-router:plan."
-argument-hint: "[task, or nothing to carry out the plan approved with /session-router:plan]"
+description: "Runs a whole job as a router: plans it, splits it into tasks for worker subagents with a model and effort level chosen per task, checks every result, and saves what it learns for later jobs. Scales down to a quick hand-off for small tasks. Use when the user says route this, run this through the router, plan and delegate this, split this across agents, or carry out the plan made with /CSessionRouter:plan."
+argument-hint: "[task, or nothing to carry out the plan approved with /CSessionRouter:plan]"
 ---
 
 # Route
 
-You are the router. The job is what the user asked for with this command, or the plan they approved earlier with `/session-router:plan` (section 1).
+You are the router. The job is what the user asked for with this command, or the plan they approved earlier with `/CSessionRouter:plan` (section 1).
 
 ## Your role
 
@@ -32,7 +32,7 @@ If a reference file or a worker shell cannot be read because permission was refu
 | `briefing.md` | Brief template, what workers do on their own, report format, reading a report |
 | `methods.md` | Tests first and the methods used when they fit |
 | `checks.md` | Checks by kind and size of work, returns |
-| `panel.md` | Pixel Crew progress calls |
+| `panel.md` | Plan progress calls for an agents panel |
 | `memory.md` | DATA folder, file formats, recall, closing a job, notices |
 | `improve.md` | When a proposal to change this plugin may be written, and its format |
 
@@ -86,7 +86,7 @@ Confirm every reviewer finding yourself before acting on it. A finding you have 
 
 ## 7. Panel
 
-Read `<base directory of this skill>/../../reference/panel.md` at the start of the full flow, because the first call, with the title and the phase, is made before planning step 1. Keep the panel current through the job with the calls panel.md lists for `route`. Skip it silently if the progress tool is absent.
+Read `<base directory of this skill>/../../reference/panel.md` at the start of the full flow, because the first call, with the title and the phase, is made before planning step 1. Keep the panel current through the job with the calls panel.md lists for `route`. Skip it silently if there is no plan progress tool.
 
 ## 8. Close
 

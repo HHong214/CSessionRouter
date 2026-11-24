@@ -6,7 +6,7 @@ Read this when you give tasks a model and effort while planning, and again when 
 
 Start each worker with the Agent tool:
 
-- `subagent_type`: `"session-router:worker"` for a task that edits files, `"session-router:reader"` for one that only reads.
+- `subagent_type`: `"CSessionRouter:worker"` for a task that edits files, `"CSessionRouter:reader"` for one that only reads.
 - `model`: `haiku`, `sonnet`, `opus` or `fable`.
 - `effort`: `low`, `medium`, `high`, `xhigh` or `max`.
 - `description`: the task title exactly as in the plan (panel.md says why).
