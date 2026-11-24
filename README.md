@@ -180,3 +180,9 @@ What the 1.0.0 runs showed:
 - A small job on the light path: two workers with tests first, and no panel call at the close.
 
 Not yet tested: an interactive session (the question dialog, an approval stop, commits), and a `tdd`, `research`, `review` or `improve` job. In the first full `route` test the router also strayed from some rules (it fixed review findings itself and did not save its plan). After the wording was tightened, a second run saved the plan and sent the findings back to a worker. Three points were tightened once more after that run and have not been re-tested: writing the plan in the reply before the first worker starts, making the first progress-bar call before planning, and saving a look back after a return. These skills are instructions a model follows, so a weaker session model will stray more often than a stronger one. The read-only shell does not block shell tools: if a session offers it Bash or PowerShell, only its instructions stop it from changing files.
+
+## Licence
+
+MIT: see [LICENSE](LICENSE).
+
+CSessionRouter is not affiliated with or endorsed by Anthropic. Claude is a trademark of Anthropic.
