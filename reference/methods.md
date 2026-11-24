@@ -6,7 +6,7 @@ Read this while planning, to mark which tasks use tests first or another method,
 
 Tests first is automatic for logic that can be tested: functions, APIs, data transforms, bug fixes. It is skipped for UI layout, config, docs and throwaway experiments. The plan says which tasks use it. `tdd` forces it wherever a test is possible.
 
-1. **Test task.** One worker writes tests from the done criteria, runs them and shows they fail for the right reason.
+1. **Test task.** One worker writes tests from the done criteria, runs them and shows they fail for the right reason. When the thing under test moves, changes over time or follows inputs that change (a list, a page, an animation, a window), the brief asks for tests of the changes as well as of the settled state: each input changing while it runs, the first moment, and an empty or cleared state.
 2. **Lock.** First read the new tests' edge cases against the done criteria or the contract, working each literal expected value with the stated rules; a wrong case goes back to the test worker. When the tests call a typed interface, the test worker also type-checks its test file against the stated signatures, because a test runner may not type-check. Then you record the list of test files and their hashes. When that takes more than one command, have a cheap worker do it.
 3. **Build task.** A different worker implements until the tests pass. Its brief names the locked test files, which it may not edit. If a test looks wrong, it returns `NEEDS-DECISION:` with the reason.
 4. **Check.** The tests are re-run fresh by someone other than the builder. The output shows more than zero tests, all passing, and the test files' hashes are unchanged.

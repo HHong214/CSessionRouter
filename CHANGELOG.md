@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4 - 2026-11-24
+
+- For anything that moves, changes over time or follows changing inputs, the first test brief also asks for tests of the changes, the first moment and an empty or cleared state. (proposal `20261123-first-test-brief-pins-the-changes`)
+
 ## 1.1.3 - 2026-11-24
 
 - Before tests are locked, the router reads their edge cases against the contract and works each expected value, and the test worker type-checks its tests against the stated signatures. (proposal `20261122-read-tests-before-lock`)
