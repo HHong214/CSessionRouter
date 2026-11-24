@@ -1,20 +1,22 @@
 # Building methods
 
-Read this while planning, to mark which tasks use tests first or another method, and again when those tasks run.
+Read this at the start of a job. It is used while planning, to mark which tasks use tests first or another method, and when those tasks run.
 
 ## Tests first
 
 Tests first is automatic for logic that can be tested: functions, APIs, data transforms, bug fixes. It is skipped for UI layout, config, docs and throwaway experiments. The plan says which tasks use it. `tdd` forces it wherever a test is possible.
 
-1. **Test task.** One worker writes tests from the done criteria, runs them and shows they fail for the right reason. When the thing under test moves, changes over time or follows inputs that change (a list, a page, an animation, a window), the brief asks for tests of the changes as well as of the settled state: each input changing while it runs, the first moment, and an empty or cleared state.
-2. **Lock.** First read the new tests' edge cases against the done criteria or the contract, working each literal expected value with the stated rules; a wrong case goes back to the test worker. When the tests call a typed interface, the test worker also type-checks its test file against the stated signatures, because a test runner may not type-check. Then you record the list of test files and their hashes. When that takes more than one command, have a cheap worker do it.
-3. **Build task.** A different worker implements until the tests pass. Its brief names the locked test files, which it may not edit. If a test looks wrong, it returns `NEEDS-DECISION:` with the reason.
-4. **Check.** The tests are re-run fresh by someone other than the builder. The output shows more than zero tests, all passing, and the test files' hashes are unchanged.
-5. **Refactor** if needed, with the tests staying green. Then review (checks.md).
+1. **Test task.** One worker writes tests from the done criteria, runs them and shows they fail for the right reason. When the thing under test moves, changes over time or follows inputs that change (a list, a page, an animation, a window), the brief asks for tests of the changes as well as of the settled state: each input changing while it runs, the first moment, and an empty or cleared state. The test task of the next slice can run while this slice is built, when the two touch different files.
+2. **Lock.** First read the new tests' edge cases against the done criteria or the contract, working each literal expected value with the stated rules; a wrong case goes back to the test worker. When the tests call a typed interface, the test worker also type-checks its test file against the stated signatures, because a test runner may not type-check. Then you record the list of test files and their hashes. When that takes more than one command, have a cheap worker do it. Where commits were agreed, committing the test files is the lock: `git add` and `git commit` chained in one command of your own, since the files are new. `git diff --quiet <that commit> -- <the test files>` later shows that they are unchanged. On the full flow, write the lock in `PROGRESS.md` too (memory.md), so that a fresh session can check it.
+3. **Build task.** A different worker implements until the tests pass. Its brief names the locked test files, which it may not edit. If a test looks wrong, it returns `NEEDS-DECISION:` with the reason. It starts only once the lock is made.
+4. **Check.** The tests are re-run fresh by someone other than the builder. The output shows more than zero tests, all passing, and the test files' hashes are unchanged. How to run it at the least cost: checks.md, "Running the checks".
+5. **Review** (checks.md), started together with the check: neither waits for the other. A refactor it asks for goes back as a return, with the tests staying green.
 
 **Bug fix.** Reproduce the bug as a failing test first, then fix.
 
 **A return that needs a new test.** When a confirmed finding is not covered by a locked test, a test worker adds the failing test first and you renew the lock. Only then does the builder get the return. A builder never writes the tests it is checked against.
+
+**A locked test that looks wrong.** Check it yourself against the done criteria or the contract. If it is wrong, the test worker corrects it, or you do where the exception in your role allows it; then you renew the lock and the builder goes on. This is not a return for the builder: it counts as a return of the test task. If it is right, tell the builder why.
 
 ## Methods used only when they fit
 

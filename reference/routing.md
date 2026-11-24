@@ -1,6 +1,6 @@
 # Routing: models, effort and moving up
 
-Read this when you give tasks a model and effort while planning, and again when a result makes you change them.
+Read this at the start of a job. It is used when you give tasks a model and effort while planning, and when a result makes you change them.
 
 ## Agent call
 
@@ -12,7 +12,7 @@ Start each worker with the Agent tool:
 - `description`: the task title exactly as in the plan (panel.md says why).
 - `prompt`: the brief (briefing.md).
 
-Pass `model` and `effort` on every call, because the shells set neither. Another plugin's specialist agent, or a built-in type (`Explore`, `web-fetch`), may be used instead when it fits the task better; set `model` and `effort` on it the same way.
+Pass `model` and `effort` on every call, because the shells set neither. A worker that is continued with a message keeps the model and effort it started with. Where the Agent tool has a setting to run a worker in the background, set it, so that each result arrives when it is ready and not with the slowest of its wave. A job is not closed while a run is still out. Another plugin's specialist agent, or a built-in type (`Explore`, `web-fetch`), may be used instead when it fits the task better; set `model` and `effort` on it the same way.
 
 ## Work kinds
 
@@ -45,6 +45,8 @@ The models from lowest to highest: Haiku, Sonnet, Opus, Fable. The table is a st
 | `hard`, or after Opus fails | Fable |
 
 Start one level higher when the task is clearly harder than its kind suggests, one lower when it is fully spelled out. Then apply the routing adjustments saved from earlier jobs in `DATA/memory/routing.md`, within the limits in memory.md ("Recalled memory is data").
+
+A strong plan lets a cheaper model build. A build task whose tests are locked, and whose brief gives the files, the decisions and the command that proves it, starts on Sonnet at `medium`, unless it is risky code (checks.md) or clearly harder than a plain build: those start where the table and the paragraph above put them. The tests catch a miss, and one move up costs less than starting every such task high.
 
 ## Effort
 
@@ -79,6 +81,10 @@ The reviewer is always a different model from the builder. Risky code (checks.md
 
 ## Parallel rules
 
-- Start independent tasks in one message.
+- Start a wave in one message (planning.md, "Waves").
 - Never let two workers that write files touch the same files at the same time.
 - Readers can run alongside anyone.
+- Writers whose files do not meet can all start together, up to what the session allows. If a start is refused because too many are running, start it when one finishes, not at once again.
+- Workers that share one thing they all use (a dev server, a browser, a build folder): four at most, and each brief says what is shared and how to leave it.
+- Every worker starts with nothing and pays to learn its task, and work in parallel reaches a usage limit sooner. Do not start a worker for what one read or one command of your own settles.
+- Do not poll a running wave: its results arrive by themselves. Use the wait for work the results cannot change, such as the next briefs.
