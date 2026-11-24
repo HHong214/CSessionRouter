@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 - 2026-11-24
+
+- When two tasks need the same new piece, or one rule is enforced partly in each, both briefs name the one task that owns it. (proposal `20261122-one-owner-for-a-shared-piece`)
+
 ## 1.1.1 - 2026-11-24
 
 - A "Done when" for something that must hold in several places names the hardest place and why, and a check of "everywhere" lists each place it is run. (proposal `20261122-done-when-names-the-hardest-case`)
