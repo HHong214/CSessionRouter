@@ -1,0 +1,8 @@
+{
+  "name": "session-router",
+  "version": "1.0.0",
+  "description": "Session Router: the main session becomes a router that plans, splits work across subagents with a model and effort level chosen per task, checks every result and saves what it learns.",
+  "author": { "name": "local" },
+  "license": "MIT",
+  "keywords": ["skills", "subagents", "orchestration", "planning", "routing", "review", "tdd"]
+}

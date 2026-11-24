@@ -1,0 +1,5 @@
+{
+  "name": "session-router-local",
+  "owner": { "name": "local" },
+  "plugins": [{ "name": "session-router", "source": "./" }]
+}
