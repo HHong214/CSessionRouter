@@ -16,7 +16,7 @@ If a reference file or a worker shell cannot be read because permission was refu
 
 - Find DATA as `memory.md` describes and read `DATA/memory/sources.md` if it exists.
 - If improvement proposals are waiting, say so in one line.
-- On standard and deep depth, make the panel calls `<base directory of this skill>/../../reference/panel.md` lists for `research`, once the depth is picked (step 3). Quick depth makes none.
+- On standard and deep depth, make the panel calls `<base directory of this skill>/../../reference/panel.md` lists for `research`, once the depth is picked (step 3), each in the same message as another call. Quick depth makes none.
 
 ## 2. Understand the question
 

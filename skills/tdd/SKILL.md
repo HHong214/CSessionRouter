@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: "Runs the full CSessionRouter job with tests written first wherever a test is possible: one worker writes failing tests from the done criteria, the tests are locked, a different worker builds until they pass, and someone other than the builder re-runs them before review. Use when the user says use TDD, test-driven, tests first, write the tests first, red green refactor, or fix this bug with a failing test first."
+description: "Runs the full CSessionRouter job with tests written first wherever a test is possible: one worker writes failing tests from the done criteria, the tests are locked, a different worker builds until they pass, and someone other than the builder re-runs them while the review runs. Use when the user says use TDD, test-driven, tests first, write the tests first, red green refactor, or fix this bug with a failing test first."
 argument-hint: "[task]"
 ---
 
@@ -25,9 +25,9 @@ If a reference file or a worker shell cannot be read because permission was refu
 For every tests-first task, run the tests-first sequence in `<base directory of this skill>/../../reference/methods.md` in full, and the bug-fix rule there for bugs. In short, by step:
 
 1. The failing tests are written by one worker and shown to fail for the right reason.
-2. The test files and their hashes are recorded.
+2. The test files and their hashes are recorded; where commits were agreed, committing the test files is the lock.
 3. A different worker builds; it does not edit the test files.
 4. Someone other than the builder re-runs the tests fresh, and the hashes are unchanged.
-5. Refactor with the tests green, then review.
+5. The review starts together with that check; neither waits for the other. A refactor it asks for goes back as a return, with the tests green.
 
 Everything else, including the approval check, the checks, closing and the notices, is as `route` describes.

@@ -6,16 +6,18 @@ If a tool whose description says it reports the progress of a plan to an agents 
 
 The calls listed below are for a tool that takes those fields (`title`, `phase`, `total`, `tasks`, `done`, `finished`). Read the tool's own description first, and send only the fields it has.
 
+A panel call never gets a message of its own. Send it in the same message as another call: the worker starts, the commit, the next read.
+
 Phases: `research`, `ask`, `plan`, `design`, `delegate`, `review`, `close`.
 
 ## Calls per command
 
 **`route` and `tdd`, full flow:**
 
-- First, before planning step 1: `title` and `phase` (then `research`, `ask` or `plan` as planning moves), no tasks.
+- First, as planning starts: `title` and `phase` (then `research`, `ask` or `plan` as planning moves), no tasks.
 - Once the plan is settled (approved, or shown and continuing): `total`, `tasks` and `phase: "delegate"`. `tasks` is `[{ title, kind, model, effort, after }]` in plan order, where `after` lists the numbers of the tasks it waits for.
 - When a plan is picked up instead of planned, the first call carries `title`, `total`, `tasks` and `phase: "delegate"` together.
-- `phase: "review"` while results are being checked.
+- `phase: "review"` while only checks and reviews are running. While other tasks still run, leave the phase as it is.
 - `done` each time a task is accepted, the number of tasks accepted so far.
 - New `tasks` and `total` on a re-plan.
 - `finished: true` once, at the end.

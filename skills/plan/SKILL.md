@@ -18,19 +18,19 @@ You are the router, planning only. The task is what the user asked for with this
 
 ## Reference files
 
-The shared rules are in `<base directory of this skill>/../../reference/`; the base directory is printed when this skill loads. Read each file at the step that names it.
+The shared rules are in `<base directory of this skill>/../../reference/`; the base directory is printed when this skill loads. Read the files this skill uses once, in one message, at step 1. A file you have read in this conversation is not read again when a later step names it, unless the conversation has been summarised since.
 
 If a reference file or a worker shell cannot be read because permission was refused, tell the user in one line which folder needs read access (the plugin folder, `<base directory of this skill>/../..`), and stop. Never carry on without the rules. A memory file in DATA that does not exist yet is normal on a first run and is not an error.
 
 ## Steps
 
-1. **Start.** Read `<base directory of this skill>/../../reference/memory.md` and `<base directory of this skill>/../../reference/planning.md`. If proposals are waiting, say so in one line. Then read `<base directory of this skill>/../../reference/panel.md` and make the calls it lists for `plan` as you go.
+1. **Start.** In one message, read `memory.md`, `planning.md`, `panel.md`, `routing.md`, `briefing.md`, `methods.md` and `checks.md` (each is `<base directory of this skill>/../../reference/<file>`). If proposals are waiting, say so in one line. Make the calls panel.md lists for `plan` as you go, each in the same message as another call.
 2. **Recall** (planning step 1): read the memory files planning.md names and open at most three lessons that match the task.
-3. **Understand** (step 2): read what is needed. For wide reading, start readers on a cheap model; read `<base directory of this skill>/../../reference/routing.md` for the Agent call and `<base directory of this skill>/../../reference/briefing.md` for the brief.
+3. **Understand** (step 2): read what is needed. For wide reading, start readers on a cheap model; use routing.md for the Agent call and briefing.md for the brief.
 4. **Research** (step 3), when planning.md says it is needed: readers use the source-finding method in `<base directory of this skill>/../../reference/research.md`. Compare two or three approaches and recommend one, with reasons and dated sources.
 5. **Ask** (step 4): the questions that change what gets built or how it is checked, with AskUserQuestion, as planning.md describes. Record each answer.
 6. **Done criteria** (step 5): two to six checkable statements per feature, each mapping to a test or a named manual check.
-7. **Plan** (step 6): working slices, each task with title, kind, model, effort, what it waits for and its check. Read the three files named here in full before you write the tasks, because every task's model, effort, tests-first mark and check come from them. Use routing.md for kind, model and effort, `<base directory of this skill>/../../reference/methods.md` to mark tests first and other methods, and `<base directory of this skill>/../../reference/checks.md` for each check. Look for skills and agent types that fit (skill discovery, planning.md).
+7. **Plan** (step 6): working slices grouped into waves (planning.md, "Waves"), each task with title, kind, model, effort, wave, what it waits for and its check. Every task's model, effort, tests-first mark and check come from three files, so have them in mind before you write the tasks. Use routing.md for kind, model and effort, methods.md to mark tests first and other methods, and checks.md for each check. Look for skills and agent types that fit (skill discovery, planning.md).
 8. **Save** the plan as `PLAN.md` in the job folder, in the plan format from planning.md, with `Status: draft`. The job folder path is in memory.md.
 9. **Show and stop** (step 7): show the plan and the path of `PLAN.md`, and ask for approval as planning.md describes, with the commit question where "Commits" there calls for it. If the user asks for changes, revise the plan, save it again and show it again. Record the answers in the plan's Decisions. When the user approves, change the status to `approved <date>`. Then stop: do not start any task.
 

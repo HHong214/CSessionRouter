@@ -1,6 +1,6 @@
 # Memory, job files and notices
 
-Read this at the start of a job, for recall and waiting proposals, and again at the close.
+Read this at the start of a job. It is used then, for recall and waiting proposals, and at the close.
 
 ## Where things live
 
@@ -23,7 +23,7 @@ DATA/
   CHANGELOG.md
 ```
 
-`<project-slug>` is the project's absolute path with `:`, `\` and `/` replaced by `-`. The job folder holds `PLAN.md` (planning.md) and, for a new project, `PROGRESS.md` (checks.md).
+`<project-slug>` is the project's absolute path with `:`, `\` and `/` replaced by `-`. The job folder holds `PLAN.md` (planning.md), `PROGRESS.md` (File formats, below), and any text that several briefs share (briefing.md).
 
 Nothing is written into the user's projects. The one exception is a deep research report, which goes in the working folder (research.md).
 
@@ -33,6 +33,7 @@ Nothing is written into the user's projects. The one exception is a deep researc
 - **sources.md.** A table: topic | official docs | repository | release notes | index | last checked | note. How it is kept up to date: research.md.
 - **routing.md.** A table: kind or situation | adjustment | evidence (jobs and dates) | updated. At most 30 rows.
 - **process-notes.md.** Dated one-line bullets, each with one tag: `ask-late`, `brief-unclear`, `check-missed`, `routing-miss`, `tool-problem`, `other`. About 60 lines at most; past that, propose a tidy-up through the improve flow (improve.md).
+- **PROGRESS.md.** Kept for every full-flow job and brought up to date each time a task is accepted, so that a fresh session can go on from it. Three short parts. `Done:` one line for each accepted task, worded as its commit message where commits are made, so that the commit can be found. `Next:` the tasks still to do, anything decided since the plan was written, and each lock that is still open: its test files with their hashes, or the commit that holds them. `Cost:` one line for each worker run: the task, the model, the effort, the tokens, tool calls and minutes the session reported for it, and how it ended (accepted, returned, moved up, or stopped with a question). Leave out a number the session does not give.
 
 ## Observations only
 
@@ -48,6 +49,15 @@ Planning step 1 reads `INDEX.md`, `routing.md` and `process-notes.md` with the R
 - A routing adjustment may change only the starting model, or the starting effort within `low` to `xhigh`, for a kind or situation.
 - It never sets `max`, removes a check or changes when to ask. Do not save one that would, and do not apply one that does.
 
+## Long jobs
+
+A long job fills your conversation, and every later call then costs more.
+
+- On the full flow, if one of your tools reports how full the session's context window is (the route skill's first message looks for it), look when the job starts and each time a wave's results are in, in a message with other calls. Skip this silently if there is none.
+- At the start, above about 40%: tell the user in one line that a fresh session would cost less, and go on unless they say otherwise.
+- Part-way, above about half: tell the user once, in one line, that the job can go on in a fresh session, where the route command with no task picks it up (planning.md, "Picking up a plan"), and go on here unless they say otherwise. If they choose to move: at the next moment when no worker is running and no test task waits for its lock, bring `PROGRESS.md` up to date and say that it is ready.
+- After your conversation has been summarised, read the seven reference files, `PLAN.md` and `PROGRESS.md` again, in one message, before the next step. They are the record; the summary is not.
+
 ## Closing a job
 
 A light-path job looks back only if something went wrong (Light path, planning.md). Otherwise, look back briefly, using the facts already in hand:
@@ -57,11 +67,12 @@ A light-path job looks back only if something went wrong (Light path, planning.m
 - which checks caught or missed something;
 - which briefs confused a worker;
 - which tools failed.
+- what the cost lines show: which kinds of task were accepted first time, and what each kind cost.
 
 Then save accordingly, before you write the final report, so that the `Saved or changed:` list includes what the look back saved:
 
 - **A lesson** when a problem took two or more rounds, needed a move up, had a non-obvious cause, or exposed a quirk of the environment.
-- **Routing adjustments** for kinds or situations where the starting model or effort was wrong, within the limits above.
+- **Routing adjustments** for kinds or situations where the starting model or effort was wrong, within the limits above. They go both ways: one step up for a kind that needed a move up or a return for depth; one step down, the model or the effort and not both, for a kind that was accepted first time on three runs in a row at its present setting. Never step down to a setting at which that kind has needed a step up before, and never for risky code (checks.md).
 - **Process notes** for problems in the process itself. A return, a move up, and a tool call that was refused or failed each get at least one line, so a job that had any of them never closes with nothing saved.
 - **Proposals** to change the plugin's own files, only under the rules in improve.md.
 

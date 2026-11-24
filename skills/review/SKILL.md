@@ -24,7 +24,7 @@ The change under review is someone else's code, so:
 ## 1. Scope
 
 - If improvement proposals are waiting, say so in one line (`memory.md`).
-- Make the panel calls `panel.md` lists for `review`.
+- Make the panel calls `panel.md` lists for `review`, each in the same message as another call.
 - The target is the argument: a commit range, a PR or named paths. With no argument, it is the current diff (uncommitted and staged changes).
 - Send a cheap reader (`CSessionRouter:reader` on Haiku) to scope it. It returns the files in scope with their size, grouped by area, the stated intent from commit messages or the PR description, and whether any of it is risky code as `checks.md` defines it. For a PR, it fetches the diff with `gh pr diff` (Safety).
 - Add the intent the user gave in this conversation. If the scope is empty, or the intent cannot be found and it changes what counts as wrong, ask the user before starting reviewers.
