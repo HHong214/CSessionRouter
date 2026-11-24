@@ -285,6 +285,9 @@ const tracked = trackedTextFiles();
   keep(M, has(M, '1. **Test task.** One worker writes tests from the done criteria, runs them and shows they fail for the right reason. When the thing under test moves, changes over time or follows inputs that change (a list, a page, an animation, a window), the brief asks for tests of the changes as well as of the settled state: each input changing while it runs, the first moment, and an empty or cleared state.'), 'step 1 of the tests-first method');
   keep(M, has(M, '2. **Lock.** First read the new tests\' edge cases against the done criteria or the contract, working each literal expected value with the stated rules; a wrong case goes back to the test worker. When the tests call a typed interface, the test worker also type-checks its test file against the stated signatures, because a test runner may not type-check. Then you record the list of test files and their hashes. When that takes more than one command, have a cheap worker do it.'), 'step 2 of the tests-first method');
 
+  const P = 'reference/planning.md';
+  keep(P, has(P, "git add -- <the task's files>"), 'the commit rule "git add -- <the task\'s files>"');
+
   const heads = [
     ['skills/route/SKILL.md', '## Your context'],
     ['reference/planning.md', '## Waves'],

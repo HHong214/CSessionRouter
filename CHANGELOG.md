@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 - 2026-11-24
+
+- The commit after an accepted task now adds the task's files first. A commit by path alone fails on files git does not know yet, so a task that made a new file could not be committed as the rule was written.
+
 ## 1.2.0 - 2026-11-24
 
 - Tasks are planned in waves and each wave starts in one message. The checks, the review and the docs of a build run side by side, and a build is returned once, with one list.

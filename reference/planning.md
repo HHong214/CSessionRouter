@@ -69,7 +69,7 @@ With no task given, `route` uses the plan made in this conversation if the user 
 - For a new project that is not yet a git repository, the same question also asks whether to start one.
 - With no stop, do not commit unless the user asked for commits in their request.
 - A yes recorded in the plan's Decisions carries over when `route` picks the plan up.
-- When the answer is yes, make the commit yourself right after accepting a task: only that task's files, with a one-line message naming the task, as `git commit -m "<message>" -- <the task's files>`. If the index already held other staged changes before the task, ask first. Never push.
+- When the answer is yes, make the commit yourself right after accepting a task: only that task's files, with a one-line message naming the task, as `git add -- <the task's files>` and then `git commit -m "<message>" -- <the task's files>`. A commit by path takes only files git already knows, so new files need the add first. If the index already held other staged changes before the task, ask first. Never push.
 
 ## Light path
 
