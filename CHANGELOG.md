@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3 - 2026-11-24
+
+- Before tests are locked, the router reads their edge cases against the contract and works each expected value, and the test worker type-checks its tests against the stated signatures. (proposal `20261122-read-tests-before-lock`)
+
 ## 1.1.2 - 2026-11-24
 
 - When two tasks need the same new piece, or one rule is enforced partly in each, both briefs name the one task that owns it. (proposal `20261122-one-owner-for-a-shared-piece`)
