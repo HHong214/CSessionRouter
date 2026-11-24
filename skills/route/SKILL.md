@@ -46,7 +46,7 @@ If a reference file or a worker shell cannot be read because permission was refu
 Read `<base directory of this skill>/../../reference/planning.md`.
 
 - **Light path** (planning.md "Light path"): one or two bounded tasks with nothing unclear. It skips the plan dialog, the job files and the panel calls, and keeps the methods and the checks. Read `routing.md`, `briefing.md`, `methods.md` and `checks.md`, then run sections 4, 5 and 6 without the panel and plan-status steps. Close with section 8 steps 2 (only if something went wrong: a return, a move up or a tool failure) and 3. Steps 1 and 4 are for the full flow only.
-- **Full flow:** everything else. Read panel.md, and make its first call your next tool call: the title and `phase: "plan"`, before you read or plan anything else (section 7). Then go through sections 3 to 8.
+- **Full flow:** everything else. Read panel.md. If a plan progress tool is among your tools (panel.md says how to find it), make its first call your next tool call: the title and `phase: "plan"`, before you read or plan anything else (section 7). This holds only if such a tool is among the tools; otherwise the flow goes straight on. Then go through sections 3 to 8.
 
 ## 3. Plan
 

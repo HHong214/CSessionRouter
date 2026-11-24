@@ -4,6 +4,8 @@ Read this at the start of a command that makes panel calls; the list below says 
 
 If a tool whose description says it reports the progress of a plan to an agents panel is among your tools, keep it current. It may be deferred: look for it with ToolSearch and the words `plan progress`, and load it. Skip all of this silently if there is none.
 
+The calls listed below are for a tool that takes those fields (`title`, `phase`, `total`, `tasks`, `done`, `finished`). Read the tool's own description first, and send only the fields it has.
+
 Phases: `research`, `ask`, `plan`, `design`, `delegate`, `review`, `close`.
 
 ## Calls per command

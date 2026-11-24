@@ -117,9 +117,9 @@ The router reaches the data folder with its Read, Write and Edit tools, never wi
 ## Learning
 
 - **Saved by itself** when a job closes: process notes, routing adjustments, and lessons for problems that took two or more rounds, needed a stronger model, had a non-obvious cause or exposed a quirk of the environment.
-- **Needs `/CSessionRouter:improve`:** any change to the plugin's own skills and reference files. The router writes such a change only as a proposal, and only when the same problem has shown up in two or more jobs. `improve` shows each proposal (the problem, the evidence, the file and the exact before and after text) and asks you: Approve, Reject or Later. It works on a clone of the plugin's repository (it asks for the path once and keeps it in `config.md`; suggested: `Documents\GitHub\CSessionRouter` under your home folder). An approved change is backed up first (the backup is named for the version the change produces), made in the clone, raises the clone's patch version, and is committed there, one commit per proposal; only then is it logged and marked applied. Then `improve` asks whether to push. It never pushes without your answer. After a push, the change takes effect once you run `/plugin marketplace update csessionrouter` and `/reload-plugins`. If you decline a write, or Claude Code refuses it, anything already changed is restored, nothing is logged, the proposal stays waiting, and the router shows you the exact change so you can allow it or apply it by hand. A rejected change is not proposed again.
+- **Needs `/CSessionRouter:improve`:** any change to the plugin's own skills and reference files. The router writes such a change only as a proposal, and only when the same problem has shown up in two or more jobs. `improve` shows each proposal (the problem, the evidence, the file and the exact before and after text) and asks you: Approve, Reject or Later. It works on a clone of the plugin's repository (it asks for the path once and keeps it in `config.md`; suggested: `Documents\GitHub\CSessionRouter` under your home folder). An approved change is backed up first (the backup is named for the version the change produces), made in the clone, raises the clone's patch version, and is committed there, one commit per proposal; only then is it logged and marked applied. Then `improve` asks whether to push, once. The question says that a push sends every unpushed commit on the clone's current branch, not only the router's, and that the changelog line and the commit message become public with it, and it shows those lines first. It never pushes without your answer. After a push, the change takes effect once you run `/plugin marketplace update csessionrouter` and `/reload-plugins`. If you decline a write, or Claude Code refuses it, anything already changed is restored, nothing is logged, the proposal stays waiting, and the router shows you the exact change so you can allow it or apply it by hand. If a write to the data folder is refused after the commit was made, the commit stays and is never applied again: `improve` tells you the change is committed (with the commit's short hash) but could not be filed, and at the start of the next run it recognises the waiting proposal and files it. A rejected change is not proposed again.
 - **Protected rules** can never be proposed away: approval before heavy work; asking when something is unconfirmed; the every-task checks; the notices; approval for changes to the plugin's own files; recording only what was observed; no `max` effort unless you ask; the router does not build. A proposal that would weaken one, or that edits the sections defining them (listed in `reference/improve.md`), is not offered and is moved to the rejected proposals with a note.
-- **Undo:** `/CSessionRouter:improve undo` restores the newest backup in the clone as a new commit, after asking you, and raises the patch version again. A second undo steps back one change further. The undone proposal is not proposed again. A refused or declined write is handled as it is when applying.
+- **Undo:** `/CSessionRouter:improve undo` restores the newest backup in the clone as a new commit, after asking you, and raises the patch version again. If anyone has committed to one of those files since the change was applied (other than later changes of `improve` that were already undone), it refuses, names the commit and leaves everything as it is. A second undo steps back one change further. The undone proposal is not proposed again. A refused or declined write is handled as it is when applying.
 
 When `improve` starts, it checks that the text of each applied change is still in its file in the clone. If the clone was reset or checked out at another version and some are missing, it names them in one line and does not re-apply them without your answer.
 
@@ -151,6 +151,17 @@ The version is pinned, so a new one reaches you only when you ask for it:
 ```
 
 Then run `/reload-plugins`.
+
+## What improve needs
+
+`/CSessionRouter:improve` changes the plugin in a clone of its repository and asks before it pushes, so it needs a clone you can push to. If you own the repository (HHong214), your clone of it is enough. Anyone else cannot push to it and needs their own fork: fork the repository on GitHub, clone your fork, and add your fork as the marketplace, so that what you push is what you install:
+
+```
+git clone <address of your fork>
+claude plugin marketplace add <address of your fork>
+```
+
+Without such a clone, proposals stay pending and everything else works the same.
 
 ## What has been tested
 

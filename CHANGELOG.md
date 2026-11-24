@@ -6,6 +6,9 @@
 - On GitHub now, by HHong214: https://github.com/HHong214/CSessionRouter. Install it with `claude plugin marketplace add https://github.com/HHong214/CSessionRouter.git`, then `claude plugin install CSessionRouter@csessionrouter`. Update it with `/plugin marketplace update csessionrouter`.
 - Works with any agents panel that offers a plan-progress tool and a step-reporting tool for subagents, or with none. No other plugin is named in the rules any more.
 - `improve` now works on the repository: it changes the plugin in your clone of it, never in the installed copy, makes one commit per applied proposal, and asks before it pushes.
+- `improve` is stricter at its edges. If a write to the data folder is refused after the commit was made, it says the change is committed (with the commit's short hash) but could not be filed, never applies it again, and files it at the start of the next run. The push question says that a push sends every unpushed commit on the clone's current branch and that the changelog line and the commit message become public, and shows those lines. Undo refuses when someone has committed to the file since the change was applied.
+- The agents panel is optional everywhere: the panel calls are made only if a tool that takes those fields is there, and only the fields it has are sent.
+- The README says what `improve` needs: a clone you can push to, which for anyone but the repository's owner is their own fork.
 
 ## 1.0.0 - 2026-11-18
 

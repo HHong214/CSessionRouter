@@ -15,7 +15,7 @@ If a reference file or a worker shell cannot be read because permission was refu
 ## 1. Find the files
 
 - Find DATA, the clone of the plugin's repository and the current version as `improve.md` describes. If the clone's path is not saved, or is not the plugin's repository, ask for it as `improve.md` says.
-- Run the lost changes check in `improve.md`: name in one line any applied proposal whose After text is missing from its file, and apply nothing again without the user's answer.
+- Run the lost changes check in `improve.md`: name in one line any applied proposal whose After text is missing from its file, and apply nothing again without the user's answer. The check also finds a waiting proposal whose change is already committed in the clone: tell the user, file it as `improve.md` says, and never apply it again.
 - If the argument is `undo`, go to section 4.
 
 ## 2. List the proposals
@@ -42,5 +42,6 @@ Follow the undo steps in `improve.md`, including what to do when a write is refu
 ## 5. Report
 
 - What was applied (file, new version and commit), what was rejected and what was left for later; or, for undo, what was restored and which proposal moved to `rejected/`.
-- If a commit was made, ask once whether to push, as `improve.md` describes. Never push without the answer. After a push, remind the user that the change takes effect after `/plugin marketplace update csessionrouter` and `/reload-plugins`; without one, say it is committed in the clone only.
+- If a commit was made, ask whether to push here, once, as step 8 of `improve.md` describes: that one question is the push question, not a second one after it. It tells the user that a push sends every unpushed commit on the clone's current branch, not only the router's, and that the changelog line and the commit message become public with it, and it shows those lines so the user can read them first. Never push without the answer.
+- If a change was committed but could not be filed in DATA, say so with the commit's short hash, as step 7 of `improve.md` describes. After a push, remind the user that the change takes effect after `/plugin marketplace update csessionrouter` and `/reload-plugins`; without one, say it is committed in the clone only.
 - End with the `Saved or changed:` list (`memory.md`): proposals applied or rejected, backups made, files restored, version changes. With none: `Saved or changed: nothing`.
