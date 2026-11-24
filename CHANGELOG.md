@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 - 2026-11-24
+
+- A "Done when" for something that must hold in several places names the hardest place and why, and a check of "everywhere" lists each place it is run. (proposal `20261122-done-when-names-the-hardest-case`)
+
 ## 1.1.0 - 2026-11-24
 
 - Renamed to CSessionRouter. The commands are now `/CSessionRouter:route`, `plan`, `research`, `tdd`, `review` and `improve`, and the two worker types are `CSessionRouter:worker` and `CSessionRouter:reader`. The data folder keeps its older name, `~/.session-router`, so what was learned stays where it is.

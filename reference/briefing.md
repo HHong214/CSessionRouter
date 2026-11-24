@@ -35,6 +35,7 @@ Report: <anything beyond the standard report, or omit>
 
 - Give each verification as one plain command (for example `node --test`), not a chained shell line, so that the session's permission rules can match it.
 - Keep a brief under a screen. A longer one usually means two tasks.
+- A "Done when" for something that must hold in several places names the hardest one and why (the narrowest layout, the darkest theme, the longest text, a hidden or late-mounted parent), and a check of "everywhere" lists each place it is run.
 - A build task after a test task names the locked test files (methods.md).
 - A review brief follows the rules in checks.md.
 - For a return, list the defects (checks.md) and reuse the task title as the `description`.
