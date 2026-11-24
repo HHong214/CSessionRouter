@@ -1,6 +1,6 @@
 {
   "name": "CSessionRouter",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "CSessionRouter: the main session becomes a router that plans, splits work across subagents with a model and effort level chosen per task, checks every result and saves what it learns.",
   "author": { "name": "HHong214" },
   "license": "MIT",

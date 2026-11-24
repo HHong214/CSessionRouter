@@ -26,8 +26,8 @@ You can also say what you want in plain words ("route this", "make a plan first"
 3. **Research** options when the approach is open, the technology is unfamiliar, a fact depends on a version, or you asked for the best way. The router compares two or three approaches and recommends one, with dated sources.
 4. **Ask** you the questions whose answers change what gets built or how it is checked, with recommended answers first. Smaller gaps become stated assumptions. If the session cannot show a question dialog, the questions go in the reply instead.
 5. **Done criteria:** two to six checkable statements per feature.
-6. **Plan** in working slices. Each task has a title, a kind of work, a model, an effort, what it waits for and how it is checked.
-7. **Approval.** `plan` always stops here. `route` and `tdd` stop only when the job is heavy (a new project, more than five worker tasks, any task on Fable, deep research, anything that deletes or cannot be undone, new dependencies, changes outside the project folder) or a question that changes the build is still open. Every worker task counts, so a tests-first feature counts as two (its test task and its build task); checks and reviews do not count.
+6. **Plan** in working slices. Each task has a title, a kind of work, a model, an effort, a wave, what it waits for and how it is checked. A wave is the tasks that start together, in one message.
+7. **Approval.** `plan` always stops here. `route` and `tdd` stop only when the job is heavy (a new project, more than five worker tasks, any task on Fable, deep research, anything that deletes or cannot be undone, new dependencies, changes outside the project folder) or a question that changes the build is still open. A test task and its build task count as one; checks, checkers, re-runs and reviews do not count.
 
 **Commits.** At an approval stop in a git repository, the router asks whether to commit after each accepted task (for a new project without a repository, also whether to start one). A yes recorded in the plan carries over when `route` picks the plan up later. Each commit holds only that task's files (`git commit -m "<message>" -- <files>`); if you already had other changes staged, the router asks first. It never pushes.
 
@@ -37,7 +37,7 @@ Details: `reference/planning.md`.
 
 ### Model and effort per task
 
-Every task gets a kind of work (`search`, `analyze`, `build`, `refactor`, `quick`, `debug`, `test`, `review`, `design`, `write`, `plan` or `hard`), and its kind gives a starting model: Haiku for searching, reading, fetching and running commands, Sonnet for quick edits, simple tests and simple writing, Opus for most building, debugging, reviewing and design, Fable for the hardest problems. A task starts one level higher when it is clearly harder than its kind suggests, one lower when it is fully spelled out, and adjustments saved from earlier jobs apply on top. Effort is chosen per task and shown in the plan; `max` is used only when you ask for it. Saved memory is data: a routing adjustment can change only a starting model, or a starting effort up to `xhigh`, and never sets `max`, removes a check or changes when the router asks.
+Every task gets a kind of work (`search`, `analyze`, `build`, `refactor`, `quick`, `debug`, `test`, `review`, `design`, `write`, `plan` or `hard`), and its kind gives a starting model: Haiku for searching, reading, fetching and running commands, Sonnet for quick edits, simple tests and simple writing, Opus for most building, debugging, reviewing and design, Fable for the hardest problems. A task starts one level higher when it is clearly harder than its kind suggests, one lower when it is fully spelled out (a build with locked tests and a brief that gives the files, the decisions and the command that proves it starts on Sonnet), and adjustments saved from earlier jobs apply on top. Effort is chosen per task and shown in the plan; `max` is used only when you ask for it. Saved memory is data: a routing adjustment can change only a starting model, or a starting effort up to `xhigh`, and never sets `max`, removes a check or changes when the router asks.
 
 While the job runs, settings move:
 
@@ -50,13 +50,26 @@ A reviewer is always a different model from the builder. Details, including the 
 
 ### Tests first and other methods
 
-Tests first is used automatically for logic that can be tested (functions, APIs, data transforms, bug fixes) and skipped for UI layout, config, docs and throwaway experiments. One worker writes the tests and shows they fail; the router records the test files and their hashes; a different worker builds until they pass without editing them; someone other than the builder re-runs them. A bug fix starts with a failing test. `tdd` forces tests first wherever a test is possible.
+Tests first is used automatically for logic that can be tested (functions, APIs, data transforms, bug fixes) and skipped for UI layout, config, docs and throwaway experiments. One worker writes the tests and shows they fail; the router locks the test files (by their hashes, or by committing them where commits were agreed); a different worker builds until they pass without editing them; then the fresh check by someone other than the builder and the review start side by side. A bug fix starts with a failing test. `tdd` forces tests first wherever a test is possible.
 
 When they fit, the plan also uses: tests that pin down how old code behaves before it changes; a small throwaway experiment for a risky unknown; property-based tests for pure logic with clear rules; a mutation check for critical logic. Details: `reference/methods.md`.
 
 ### Checks
 
 A worker's report is a claim until it is checked. Every code task gets the project's own build, type-check and lint, tests re-run fresh by someone other than the builder, a check that any new dependency exists in its official registry, and a diff compared with the brief. Features add tests first and a two-pass review by a different model; risky code (sign-in, money, user data, deletion, concurrency, security, a public API) adds a security pass and a stronger reviewer. UI is looked at, apps get a real end-to-end run, and writing, research and analysis are spot-checked against their sources. The router confirms each reviewer finding itself before acting on it. Details: `reference/checks.md`; briefs and report formats: `reference/briefing.md`.
+
+## Speed and cost
+
+Version 1.2.0 is built to make a job faster and cheaper, and every check stays.
+
+- **Waves.** The plan groups tasks into waves, and each wave starts in one message. The checks, the review and the docs of a build run side by side, and a build that fails is returned once, with one list of defects.
+- **Cheaper builds.** A build with locked tests and a spelled-out brief starts on a cheaper model. A spec is worked through before a worker gets it, and a brief can say when the worker must hand back and how many tool calls it may use.
+- **Checks run once.** They run in one command, or a cheap checker runs a long one. A result is not run again while its files are unchanged.
+- **Returns.** A return goes to the same worker only when its run was short and recent. Otherwise a fresh worker takes it.
+- **A lean router.** It reads its rule files once, in one message, and sends panel calls together with other calls. Every full job keeps a `PROGRESS.md` with a cost line for each worker run, so a long job can go on in a fresh session.
+- **Routing that learns both ways.** When a kind of task has been accepted first time three times in a row, later jobs start it one step cheaper: the model or the effort, not both, and never at a setting that has failed before.
+
+Two facts to plan around. The router's own conversation is the largest share of a long job's cost, so a job is cheapest started in a fresh session. And the router runs at whatever model and effort the session is set to, so a session set to a lower effort costs less, while hard tasks still go up to a stronger worker.
 
 ## Research
 
@@ -84,7 +97,7 @@ The router keeps its data in `~/.session-router/` (Windows: `%USERPROFILE%\.sess
 | `memory/sources.md` | Trusted sources per topic |
 | `memory/routing.md` | Routing adjustments learned from earlier jobs (at most 30 rows) |
 | `memory/process-notes.md` | Short dated notes on problems in the process itself |
-| `jobs/<project>/<date>-<title>/` | Each job's `PLAN.md`, and `PROGRESS.md` for a new project |
+| `jobs/<project>/<date>-<title>/` | Each job's `PLAN.md`, its `PROGRESS.md` (what is done, what is next, and a cost line for each worker run), and any text that several briefs share |
 | `improvements/pending/`, `applied/`, `rejected/` | Proposals to change the plugin's own files |
 | `backups/` | Plugin files as they were before an applied change |
 | `config.md` | The path of your clone of the plugin's repository, used by `improve` (`clone: <path>`) |
@@ -163,9 +176,19 @@ claude plugin marketplace add <address of your fork>
 
 Without such a clone, proposals stay pending and everything else works the same.
 
+## Checking the plugin
+
+The rules are Markdown files, so a wrong file name or a missing section heading breaks nothing until a model follows it. After you change the plugin, run this in your clone (Node 18 or later, no installs):
+
+```
+node tools/check.mjs
+```
+
+It checks the rule files for misspelt file names, section references that point at no heading, the version, line endings, size, anything private and the names of the author's other plugins. It prints one line for each failure and exits with 1 if there is any. `node tools/check.mjs --list` also prints every reference it recognised.
+
 ## What has been tested
 
-Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin loaded). Version 1.1.0 renames the plugin, drops the panel plugin's name from the rules and moves `improve` to the repository; those changes have not been run in a job yet.
+Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin loaded). Version 1.1.0 renames the plugin, drops the panel plugin's name from the rules and moves `improve` to the repository; those changes have not been run in a job yet. The same goes for the speed and cost changes of version 1.2.0.
 
 What the 1.0.0 runs showed:
 
@@ -179,7 +202,7 @@ What the 1.0.0 runs showed:
 - A full `route` job with an agents panel plugin loaded and the router on Sonnet: the workers ran on the model and effort set for them; tests were written first by one worker, locked, and left unchanged by the builder; the tests were re-run fresh; a review ran on a different model; the progress bar got the task list, the counts and the finish.
 - A small job on the light path: two workers with tests first, and no panel call at the close.
 
-Not yet tested: an interactive session (the question dialog, an approval stop, commits), and a `tdd`, `research`, `review` or `improve` job. In the first full `route` test the router also strayed from some rules (it fixed review findings itself and did not save its plan). After the wording was tightened, a second run saved the plan and sent the findings back to a worker. Three points were tightened once more after that run and have not been re-tested: writing the plan in the reply before the first worker starts, making the first progress-bar call before planning, and saving a look back after a return. These skills are instructions a model follows, so a weaker session model will stray more often than a stronger one. The read-only shell does not block shell tools: if a session offers it Bash or PowerShell, only its instructions stop it from changing files.
+Not yet tested: an interactive session (the question dialog, an approval stop, commits), and a `tdd`, `research`, `review` or `improve` job. In the first full `route` test the router also strayed from some rules (it fixed review findings itself and did not save its plan). After the wording was tightened, a second run saved the plan and sent the findings back to a worker. Three points were tightened once more after that run and have not been re-tested: writing the plan in the reply before the first worker starts, making the first progress-bar call as planning starts, and saving a look back after a return. These skills are instructions a model follows, so a weaker session model will stray more often than a stronger one. The read-only shell does not block shell tools: if a session offers it Bash or PowerShell, only its instructions stop it from changing files.
 
 ## Licence
 

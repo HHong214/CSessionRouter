@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0 - 2026-11-24
+
+- Tasks are planned in waves and each wave starts in one message. The checks, the review and the docs of a build run side by side, and a build is returned once, with one list.
+- A build with locked tests and a spelled-out brief starts on a cheaper model. A brief can name when the worker hands back and a budget of tool calls, and a spec is worked through before a worker gets it.
+- Checks run once: in one command, or by a cheap checker for a long run. A result is not run again while its files are unchanged.
+- A return goes to the same worker only when its run was short and recent, and otherwise to a fresh one.
+- The router reads its rule files once, in one message, sends panel calls with other calls, and keeps a `PROGRESS.md` for every full job with a cost line for each worker run. A long job can go on in a fresh session from it.
+- Routing adjustments now also step down, after three first-time passes in a row.
+- A test task and its build task count as one when a job's size is judged.
+- Workers keep their output short, stop after three attempts at the same failure, and say what is left on a partial result.
+- `tools/check.mjs` checks the rule files: paths, section names, version, line endings, size, nothing private, and none of the author's other plugins named.
+
 ## 1.1.4 - 2026-11-24
 
 - For anything that moves, changes over time or follows changing inputs, the first test brief also asks for tests of the changes, the first moment and an empty or cleared state. (proposal `20261123-first-test-brief-pins-the-changes`)
