@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.3.0 - 2026-11-25
+
+- Plain words no longer start the plan, research and review skills: they answer only when you name the router or CSessionRouter, or type the command. The descriptions of all six skills are shorter, so they cost less to load in every session.
+- Picking up a saved plan looks only in the current project's job folder and finds open plans by their `Status:` line, instead of listing every plan. With more than one open plan, the router lists them and asks. A plan picked up with no task given now loads the panel tools too.
+- Limits of its own: at most 6 agents of a job run at once; after 20 worker runs the router asks, with the cost so far, before starting more; deep research uses 8 to 12 searchers; a job re-plans once, then asks. A planned Fable reviewer makes a job heavy, and a heavy job never takes the light path. A large review keeps to six reviewers at once.
+- The three memory files every job reads have byte caps as well as line caps: `INDEX.md` 12,000, `routing.md` 6,000, `process-notes.md` 20,000. At the close of a full job, if one is past a cap, the router asks whether to tidy it; on a yes it copies the file first, shortens it, never deletes a lesson and adds nothing.
+- Scratch files have one home: the session's scratchpad when there is one, otherwise the system's temp folder, never the project. A worker that drives a browser reuses one profile folder. At the close, the router tells you the scratch folder's size and clears it only on your yes, on the light path too.
+- Commands that work in both Git Bash and PowerShell 5.1: chained commands are given in each shell's form, paths are quoted with forward slashes, and `"@{upstream}.."` is quoted. Inside the data folder the router may now also move a file and make a folder, and check a file's size, each with one plain command.
+- A start-of-job tool search runs only on the full flow, with at most two results. Before the plan is shown, the only agents that may start are the planning readers and searchers. After a conversation is summarised, `tdd` and `review` read the route skill again.
+- A review brief sets its own report length (800 words) and asks for every finding.
+- Workers send their step reports together with their next call, and these do not count against a tool-call budget.
+- `improve` checks for lost changes by the applying commit, not by the After text; refuses a proposal whose change is already present; reads the applied, pending and rejected proposals before writing a new one; and runs the plugin's checker before each commit.
+- `tools/check.mjs` has a byte cap beside the line cap for the always-read files, counts a missing file as a failed check, pins `disallowedTools: Agent` in both worker shells, and takes `--root <folder>` to check another copy.
+- The README says what is now different and brings "What has been tested" up to date.
+
 ## 1.2.2 - 2026-11-24
 
 - An exact copy of a file in the router's data folder (a backup, or a copy kept before a tidy-up) may be made with one copy command, because the Write tool cannot copy a file exactly. (proposal `20261124-data-copy-by-command`)

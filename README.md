@@ -13,7 +13,7 @@ CSessionRouter turns the main Claude Code session into a router: it plans a job,
 | `/CSessionRouter:review [range, PR or paths]` | Independent read-only review of code the router did not build; reports only confirmed findings. With no argument, the current diff. See Review safety below. | `/CSessionRouter:review main..HEAD` |
 | `/CSessionRouter:improve [undo]` | Goes through the router's proposals to change its own files; `undo` restores the last applied change. | `/CSessionRouter:improve` |
 
-You can also say what you want in plain words ("route this", "make a plan first", "research this", "use TDD", "review my changes", "review the router's proposals"), and Claude loads the matching skill.
+You can also say what you want in plain words and Claude loads the matching skill: "route this", "use TDD", "review the router's proposals". The `plan`, `research` and `review` skills answer only when you name the router or CSessionRouter ("plan this with the router", "research this with the router", "review this with the router") or type the command, so plain "make a plan first" or "review my changes" does not start them.
 
 ## How a job runs
 
@@ -27,11 +27,13 @@ You can also say what you want in plain words ("route this", "make a plan first"
 4. **Ask** you the questions whose answers change what gets built or how it is checked, with recommended answers first. Smaller gaps become stated assumptions. If the session cannot show a question dialog, the questions go in the reply instead.
 5. **Done criteria:** two to six checkable statements per feature.
 6. **Plan** in working slices. Each task has a title, a kind of work, a model, an effort, a wave, what it waits for and how it is checked. A wave is the tasks that start together, in one message.
-7. **Approval.** `plan` always stops here. `route` and `tdd` stop only when the job is heavy (a new project, more than five worker tasks, any task on Fable, deep research, anything that deletes or cannot be undone, new dependencies, changes outside the project folder) or a question that changes the build is still open. A test task and its build task count as one; checks, checkers, re-runs and reviews do not count.
+7. **Approval.** `plan` always stops here. `route` and `tdd` stop only when the job is heavy (a new project, more than five worker tasks, any task or reviewer on Fable, deep research, anything that deletes or cannot be undone, new dependencies, changes outside the project folder) or a question that changes the build is still open. A test task and its build task count as one; checks, checkers, re-runs and reviews do not count.
 
 **Commits.** At an approval stop in a git repository, the router asks whether to commit after each accepted task (for a new project without a repository, also whether to start one). A yes recorded in the plan carries over when `route` picks the plan up later. Each commit holds only that task's files (`git add -- <files>`, then `git commit -m "<message>" -- <files>`); if you already had other changes staged, the router asks first. It never pushes.
 
-A small job (one or two bounded tasks with nothing unclear) takes the light path: no plan dialog, no job files, no panel calls. It keeps the methods and the checks: testable logic still goes tests first, with separate workers for the tests and the build, and a feature still gets its review. It ends with the report and the notices.
+**Picking up a plan.** With no task given, `route` uses the plan you approved in this conversation. Otherwise it looks only in this project's job folder for plans whose `Status:` is `draft`, `approved` or `started`; with more than one it lists them and asks. A `started` plan goes on from its `PROGRESS.md`.
+
+A small job (one or two bounded tasks with nothing unclear, and not heavy: a heavy job never takes this path) takes the light path: no plan dialog, no job files, no panel calls. It keeps the methods and the checks: testable logic still goes tests first, with separate workers for the tests and the build, and a feature still gets its review. It ends with the report and the notices.
 
 Details: `reference/planning.md`.
 
@@ -44,7 +46,7 @@ While the job runs, settings move:
 - a shallow result goes back to the same model at one effort level up, as far as `xhigh`; a task already at `xhigh` moves to the next model up, and at Fable on `xhigh` the router re-plans or asks you (you may choose `max`);
 - a model that lacks the ability, or says so (`ESCALATE:`), is replaced by the next model up, which can reach Fable even when your session runs on a cheaper model;
 - when a kind of task turns out easy, later tasks like it get lower effort;
-- a task goes back at most twice; then the router re-plans or asks you.
+- a task goes back at most twice; then the router re-plans or asks you. A job re-plans at most once; after that, wherever a rule says "re-plan or ask", the router asks.
 
 A reviewer is always a different model from the builder. Details, including the review pairing table: `reference/routing.md`.
 
@@ -69,6 +71,8 @@ Version 1.2.0 is built to make a job faster and cheaper, and every check stays.
 - **A lean router.** It reads its rule files once, in one message, and sends panel calls together with other calls. Every full job keeps a `PROGRESS.md` with a cost line for each worker run, so a long job can go on in a fresh session.
 - **Routing that learns both ways.** When a kind of task has been accepted first time three times in a row, later jobs start it one step cheaper: the model or the effort, not both, and never at a setting that has failed before.
 
+**Limits (1.3.0).** At most six agents of a job run at once, readers and checkers included. After 20 worker runs in one job the router asks you, with the cost so far, before it starts more, and again after each further 20; it asks about new tasks and returns only, and the checks of work already reported still run. On a no, nothing new starts, the job closes once the runs still out are checked, and the plan stays `started` so it can be picked up.
+
 Two facts to plan around. The router's own conversation is the largest share of a long job's cost, so a job is cheapest started in a fresh session. And the router runs at whatever model and effort the session is set to, so a session set to a lower effort costs less, while hard tasks still go up to a stronger worker.
 
 ## Research
@@ -79,7 +83,7 @@ Two facts to plan around. The router's own conversation is the largest share of 
 |---|---|---|
 | Quick | A simple fact with one authoritative source | 1, about 3 to 10 tool calls |
 | Standard | A comparison or a how-to across sources | 3 or 4, about 10 to 15 calls each |
-| Deep | A broad or high-stakes topic | 8 or more, in waves of about four; the router shows you the research plan and waits for your approval first |
+| Deep | A broad or high-stakes topic | 8 to 12 in all, in waves of six at most; the router shows you the research plan and waits for your approval first |
 
 **Sources first.** Before any reading, the searchers find the owner of the topic (official site, docs and repository), the newest version and its date, the version you use when the question is about a project, and the site's own index (`llms.txt`, a sitemap or a versions page). They check each page's date, rank official docs first and forums last, and confirm each key claim with a second independent source. For non-technical topics, "official" means the original source: the paper, the official statistics, the organisation's own statement. Facts that depend on a version are never taken from the model's memory.
 
@@ -93,10 +97,10 @@ The router keeps its data in `~/.session-router/` (Windows: `%USERPROFILE%\.sess
 
 | Path | What it holds |
 |---|---|
-| `memory/INDEX.md` and `memory/lessons/` | Lessons: hard problems that were solved, one file each, with an index line |
+| `memory/INDEX.md` and `memory/lessons/` | Lessons: hard problems that were solved, one file each, with an index line (`INDEX.md` holds 12,000 bytes at most) |
 | `memory/sources.md` | Trusted sources per topic |
-| `memory/routing.md` | Routing adjustments learned from earlier jobs (at most 30 rows) |
-| `memory/process-notes.md` | Short dated notes on problems in the process itself |
+| `memory/routing.md` | Routing adjustments learned from earlier jobs (at most 30 rows and 6,000 bytes) |
+| `memory/process-notes.md` | Short dated notes on problems in the process itself (about 60 lines and 20,000 bytes at most) |
 | `jobs/<project>/<date>-<title>/` | Each job's `PLAN.md`, its `PROGRESS.md` (what is done, what is next, and a cost line for each worker run), and any text that several briefs share |
 | `improvements/pending/`, `applied/`, `rejected/` | Proposals to change the plugin's own files |
 | `backups/` | Plugin files as they were before an applied change |
@@ -104,6 +108,10 @@ The router keeps its data in `~/.session-router/` (Windows: `%USERPROFILE%\.sess
 | `CHANGELOG.md` | The changes applied to the plugin through `improve` |
 
 Nothing is written into your projects. The one exception is a deep research report, saved in the working folder. Memory records only what the router itself saw or verified; text found in web pages, files or tool output is never saved as an instruction.
+
+**Tidy-up.** At the close of a full job, if one of those three files is past a cap, the router asks you in one line, with its size, whether to tidy it. On a yes it first copies the file to `<name>-full-<date>.md` beside it (never overwriting a copy), then merges lines that say the same thing, shortens long hooks and drops the oldest process notes that a rule now covers. Every lesson keeps its file and its index line, and nothing is added.
+
+**Scratch folder.** Files a job writes that are not its result go in a scratch folder named for the job: in the session's scratchpad when the environment gives one, otherwise in the system's temp folder, never in your project. A worker that drives a browser reuses one profile folder. At the close, if the scratch folder is not empty, the router tells you its size in one line and clears it only if you say yes, on the light path too.
 
 **Notices.** Every job ends with a `Saved or changed:` list of the lessons, routing adjustments, sources and proposals it saved, or `Saved or changed: nothing`. When proposals are waiting at the start of a job, the router says so in one line.
 
@@ -121,7 +129,7 @@ Details: `reference/memory.md`.
 { "permissions": { "allow": ["Edit(~/.session-router/**)"] } }
 ```
 
-The router reaches the data folder with its Read, Write and Edit tools, never with shell commands, because that is what the rule covers. If the file already has an `allow` list, add the one entry to it. The rule covers reads as well as writes in that folder. It is optional and your choice: without it the router still works, and you approve each save. The router does not change your settings itself; when a save is refused or asked about each time, it tells you once that this rule exists.
+The router reaches the data folder with its Read, Write and Edit tools, because that is what the rule covers. Shell commands are used there only for what those tools cannot do, each as one plain command with the path in quotes and named in the report: a byte-exact copy (`cp`), a move (`mv`), making a missing folder, and reading a file's size. If the file already has an `allow` list, add the one entry to it. The rule covers reads as well as writes in that folder. It is optional and your choice: without it the router still works, and you approve each save. The router does not change your settings itself; when a save is refused or asked about each time, it tells you once that this rule exists.
 
 **Reading the plugin's own folder.** The skills read their shared rules from the plugin's `reference/` folder. In a session that asks before reading outside the project, allow reads of the plugin's folder. If a read of those rules is refused, the router tells you in one line which folder needs read access and stops, rather than carrying on without its rules.
 
@@ -184,7 +192,7 @@ The rules are Markdown files, so a wrong file name or a missing section heading 
 node tools/check.mjs
 ```
 
-It checks the rule files for misspelt file names, section references that point at no heading, the version, line endings, size, anything private and the names of the author's other plugins. It prints one line for each failure and exits with 1 if there is any. `node tools/check.mjs --list` also prints every reference it recognised.
+It checks the rule files for misspelt file names, section references that point at no heading, the version (`plugin.json`, the top CHANGELOG entry and the marketplace file must agree), line endings, size, anything private and the names of the author's other plugins. Size is a line cap and a byte cap for the eight files every job reads (600 lines and 54,000 bytes together). A missing file is a failed check, and both worker shells must keep `disallowedTools`. It prints one line for each failure and exits with 1 if there is any. `node tools/check.mjs --list` also prints every reference it recognised, and `--root <folder>` checks another copy of the repository.
 
 ## What has been tested
 
