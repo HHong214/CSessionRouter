@@ -1,14 +1,32 @@
 #!/usr/bin/env node
 // Checks the plugin's rule files (skills/, reference/, agents/) and the files around them.
-// Node 18 or later, no dependencies. Run: node tools/check.mjs [--list]
+// Node 18 or later, no dependencies. Run: node tools/check.mjs [--list] [--root <folder>]
+// --root checks another copy of the repository; the default is the repository this script is in.
 // Prints one line per failure, then a summary, and exits 1 if anything failed.
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const LIST = process.argv.includes('--list');
+const ARGS = process.argv.slice(2);
+let LIST = false;
+let rootArg = null;
+for (let i = 0; i < ARGS.length; i++) {
+  const a = ARGS[i];
+  if (a === '--list') { LIST = true; continue; }
+  let v;
+  if (a === '--root') v = ARGS[++i];
+  else if (a.startsWith('--root=')) v = a.slice('--root='.length);
+  else { console.log(`check: unknown argument ${a}`); process.exit(2); }
+  if (!v || v.startsWith('--')) { console.log('check: --root needs a folder'); process.exit(2); }
+  rootArg = v;
+}
+const ROOT = rootArg !== null ? resolve(rootArg) : resolve(dirname(fileURLToPath(import.meta.url)), '..');
+if (!existsSync(join(ROOT, 'skills')) || !statSync(join(ROOT, 'skills')).isDirectory()) {
+  console.log(`check: ${rootArg ?? ROOT} is not a CSessionRouter folder`); process.exit(2);
+}
+const ALWAYS_READ_LINES_MAX = 600;
+const ALWAYS_READ_BYTES_MAX = 54000; // UTF-8, CRLF counted as LF
 
 let passed = 0;
 const failures = [];
@@ -99,6 +117,32 @@ for (const d of skillDirs) {
   expect(seen > 0, 'files', rel, 0, 'no reference table found');
 }
 
+// The agent shells: they exist, have a name and a description, and keep their disallowedTools.
+const PINNED_DISALLOWED = {
+  'agents/worker.md': ['Agent'],
+  'agents/reader.md': ['Agent', 'Edit', 'Write', 'NotebookEdit'],
+};
+for (const [rel, pinned] of Object.entries(PINNED_DISALLOWED)) {
+  if (!exists(rel)) continue; // the check in section 2 reports a missing shell
+  const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(read(rel));
+  expect(fm, 'files', rel, 1, 'no frontmatter');
+  if (!fm) continue;
+  for (const key of ['name', 'description']) {
+    expect(new RegExp(`^${key}:`, 'm').test(fm[1]), 'files', rel, 1, `frontmatter has no ${key}`);
+  }
+  const all = [...fm[1].matchAll(/^disallowedTools:[ \t]*(.*?)[ \t]*\r?$/gm)];
+  if (all.length === 0) { bad('files', rel, 1, `frontmatter has no disallowedTools (${pinned.join(', ')} expected)`); continue; }
+  if (all.length > 1) { bad('files', rel, 1, `frontmatter has ${all.length} disallowedTools lines, expected one`); continue; }
+  const m = all[0];
+  if (m[1] === '' || /[\[\]"']/.test(m[1])) {
+    bad('files', rel, 1, `disallowedTools must be written on one line as a comma-separated list, expected "${pinned.join(', ')}"`);
+    continue;
+  }
+  const got = m[1].split(',').map((t) => t.trim()).filter(Boolean);
+  const same = got.length === pinned.length && pinned.every((t) => got.includes(t));
+  expect(same, 'files', rel, 1, `disallowedTools is "${got.join(', ')}", expected "${pinned.join(', ')}"`);
+}
+
 // ---- 2. paths
 const OUTSIDE = new Set(['PLAN.md', 'PROGRESS.md', 'INDEX.md', 'sources.md', 'process-notes.md', 'config.md',
   'CHANGELOG.md', 'README.md', 'CLAUDE.md']);
@@ -166,6 +210,7 @@ for (const f of ruleFiles) {
 }
 const uniqueRefs = refs.filter((r) => !r.dup);
 for (const r of uniqueRefs) {
+  if (!exists(r.target)) { bad('sections', r.from, r.line, `refers to ${r.target}, which does not exist`); continue; }
   expect(headingsOf(r.target).has(r.phrase), 'sections', r.from, r.line,
     `"${r.phrase}" is not a heading in ${r.target}`);
 }
@@ -260,11 +305,15 @@ const tracked = trackedTextFiles();
 {
   const files = ['skills/route/SKILL.md', ...['memory', 'planning', 'routing', 'briefing', 'methods', 'checks', 'panel'].map((n) => `reference/${n}.md`)];
   let total = 0;
+  let bytes = 0;
   for (const f of files) {
     if (!exists(f)) { bad('size', f, 0, 'missing'); continue; }
-    total += (read(f).match(/\n/g) || []).length;
+    const text = read(f).replace(/\r\n/g, '\n');
+    total += (text.match(/\n/g) || []).length;
+    bytes += Buffer.byteLength(text, 'utf8');
   }
-  expect(total <= 600, 'size', 'skills/route/SKILL.md', 0, `the eight always-read files hold ${total} lines together (600 at most)`);
+  expect(total <= ALWAYS_READ_LINES_MAX, 'size', 'skills/route/SKILL.md', 0, `the eight always-read files hold ${total} lines together (${ALWAYS_READ_LINES_MAX} at most)`);
+  expect(bytes <= ALWAYS_READ_BYTES_MAX, 'size', 'skills/route/SKILL.md', 0, `the eight always-read files hold ${bytes} bytes together (${ALWAYS_READ_BYTES_MAX} at most)`);
 }
 
 // ---- 10. kept text
