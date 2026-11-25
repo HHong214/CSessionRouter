@@ -1,6 +1,6 @@
 ---
 name: improve
-description: "Goes through the improvement proposals CSessionRouter has written about its own skills and reference files, and applies, rejects or defers each one with the user's answer, keeping a backup, raising the plugin version and making one commit in the plugin's repository clone for every applied change. With the argument undo, restores the newest backup. Use when the user says improve CSessionRouter, review the router's proposals, apply the pending improvements, what has the router learned, or undo the last router change."
+description: "Applies, rejects or defers the improvement proposals CSessionRouter wrote about its own files, each with the user's answer, with a backup, a version raise and one commit in the plugin's clone; with undo, restores the newest backup. Use when the user says improve CSessionRouter, review the router's proposals, apply the pending improvements, what has the router learned, or undo the last router change."
 argument-hint: "[undo]"
 ---
 
@@ -15,7 +15,7 @@ If a reference file or a worker shell cannot be read because permission was refu
 ## 1. Find the files
 
 - Find DATA, the clone of the plugin's repository and the current version as `improve.md` describes. If the clone's path is not saved, or is not the plugin's repository, ask for it as `improve.md` says.
-- Run the lost changes check in `improve.md`: name in one line any applied proposal whose After text is missing from its file, and apply nothing again without the user's answer. The check also finds a waiting proposal whose change is already committed in the clone: tell the user, file it as `improve.md` says, and never apply it again.
+- Run the lost changes check in `improve.md`: name in one line any applied proposal whose applying commit is missing from the clone's history, and apply nothing again without the user's answer. The check also finds a waiting proposal whose change is already committed in the clone: tell the user, file it as `improve.md` says, and never apply it again.
 - If the argument is `undo`, go to section 4.
 
 ## 2. List the proposals

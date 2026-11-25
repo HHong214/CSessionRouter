@@ -70,7 +70,7 @@ Choose effort per task while planning and show it in the plan.
 
 ## Review pairing
 
-The reviewer is always a different model from the builder. Risky code (checks.md) uses the last column.
+The reviewer is always a different model from the builder. Risky code (checks.md) uses the last column. A reviewer that a plan puts on Fable makes the job heavy, as any worker planned on Fable does (planning.md, "Heavy"), though it does not count toward the five worker tasks there.
 
 | Built on | Normal review | Risky code review |
 |---|---|---|
@@ -84,7 +84,8 @@ The reviewer is always a different model from the builder. Risky code (checks.md
 - Start a wave in one message (planning.md, "Waves").
 - Never let two workers that write files touch the same files at the same time.
 - Readers can run alongside anyone.
-- Writers whose files do not meet can all start together, up to what the session allows. If a start is refused because too many are running, start it when one finishes, not at once again.
+- Writers whose files do not meet can all start together, up to six agents of this job running at once, readers and checkers included, and fewer when the session allows fewer. If a start is refused because too many are running, start it when one finishes, not at once again.
+- After 20 worker runs in one job (each Agent call and each worker continued by a message, readers and checkers too), ask the user, with the cost so far, before the next start or continuation, and again after each further 20. It asks about new tasks and returns only: the checks and the review of work a worker has reported, and of a run still out once it reports, run whatever the answer. On a no, nothing new starts; the job closes once the runs still out are checked, what was not built is named as not done and what failed its checks as failed, and the plan's status stays `started`, so it can be picked up.
 - Workers that share one thing they all use (a dev server, a browser, a build folder): four at most, and each brief says what is shared and how to leave it.
 - Every worker starts with nothing and pays to learn its task, and work in parallel reaches a usage limit sooner. Do not start a worker for what one read or one command of your own settles.
 - Do not poll a running wave: its results arrive by themselves. Use the wait for work the results cannot change, such as the next briefs.

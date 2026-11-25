@@ -2,7 +2,7 @@
 
 Read this at the start of a command that makes panel calls; the list below says which do. The panel is an agents panel offered by another plugin; CSessionRouter works the same without it.
 
-If a tool whose description says it reports the progress of a plan to an agents panel is among your tools, keep it current. It may be deferred: look for it with ToolSearch and the words `plan progress`, and load it. Skip all of this silently if there is none.
+If a tool whose description says it reports the progress of a plan to an agents panel is among your tools, keep it current. It may be deferred: load it with one ToolSearch call, query `+progress plan` (the `+` requires that word in the tool's name) and `max_results: 2`. Skip all of this silently if there is none.
 
 The calls listed below are for a tool that takes those fields (`title`, `phase`, `total`, `tasks`, `done`, `finished`). Read the tool's own description first, and send only the fields it has.
 

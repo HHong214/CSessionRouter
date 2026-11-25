@@ -188,7 +188,7 @@ It checks the rule files for misspelt file names, section references that point 
 
 ## What has been tested
 
-Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin loaded). Version 1.1.0 renames the plugin, drops the panel plugin's name from the rules and moves `improve` to the repository; those changes have not been run in a job yet. The same goes for the speed and cost changes of version 1.2.0.
+Checked in headless test runs of version 1.0.0 (`claude -p` with the plugin loaded). Version 1.1.0 renamed the plugin, dropped the panel plugin's name from the rules and moved `improve` to the repository, and version 1.2.0 made the speed and cost changes. Since then the plugin has run the owner's own jobs in interactive sessions, which are working sessions and not test runs: from 2026-11-20 to 2026-11-24 the data folder saved 25 plans, 24 of them closed as done, and `improve` applied five proposals, each with its own commit (1.1.1 to 1.1.4 and 1.2.2). The changes of version 1.3.0 have not been run in a job yet.
 
 What the 1.0.0 runs showed:
 
@@ -202,7 +202,7 @@ What the 1.0.0 runs showed:
 - A full `route` job with an agents panel plugin loaded and the router on Sonnet: the workers ran on the model and effort set for them; tests were written first by one worker, locked, and left unchanged by the builder; the tests were re-run fresh; a review ran on a different model; the progress bar got the task list, the counts and the finish.
 - A small job on the light path: two workers with tests first, and no panel call at the close.
 
-Not yet tested: an interactive session (the question dialog, an approval stop, commits), and a `tdd`, `research`, `review` or `improve` job. In the first full `route` test the router also strayed from some rules (it fixed review findings itself and did not save its plan). After the wording was tightened, a second run saved the plan and sent the findings back to a worker. Three points were tightened once more after that run and have not been re-tested: writing the plan in the reply before the first worker starts, making the first progress-bar call as planning starts, and saving a look back after a return. These skills are instructions a model follows, so a weaker session model will stray more often than a stronger one. The read-only shell does not block shell tools: if a session offers it Bash or PowerShell, only its instructions stop it from changing files.
+Not yet tested in a test run: an interactive session (the question dialog, an approval stop, commits), which the owner's jobs use but no run has checked rule by rule, and a `tdd`, `research` or `review` job (`improve` is above). In the first full `route` test the router also strayed from some rules (it fixed review findings itself and did not save its plan). After the wording was tightened, a second run saved the plan and sent the findings back to a worker. Three points were tightened once more after that run and have not been re-tested: writing the plan in the reply before the first worker starts, making the first progress-bar call as planning starts, and saving a look back after a return. These skills are instructions a model follows, so a weaker session model will stray more often than a stronger one. The read-only shell does not block shell tools: if a session offers it Bash or PowerShell, only its instructions stop it from changing files.
 
 ## Licence
 

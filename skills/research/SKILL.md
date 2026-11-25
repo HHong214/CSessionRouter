@@ -1,6 +1,6 @@
 ---
 name: research
-description: "Researches a question on any topic, not only code, and gives a cited answer with dated sources. Finds the official sources first, splits the question into angles for cheap read-only searchers, cross-checks what they find and keeps a list of trusted sources for next time. Use when the user says research this, look into, find out, what is the latest on, compare the options for, what do the docs say about, or wants a sourced answer rather than one from memory."
+description: "Researches a question with the CSessionRouter router: official sources first, cheap read-only searchers, cross-checked claims and a cited answer with dated sources. Use only when the user asks the router or CSessionRouter to research something, as in research this with the router, or runs /CSessionRouter:research."
 argument-hint: "[question or topic]"
 ---
 

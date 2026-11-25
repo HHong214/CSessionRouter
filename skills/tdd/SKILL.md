@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: "Runs the full CSessionRouter job with tests written first wherever a test is possible: one worker writes failing tests from the done criteria, the tests are locked, a different worker builds until they pass, and someone other than the builder re-runs them while the review runs. Use when the user says use TDD, test-driven, tests first, write the tests first, red green refactor, or fix this bug with a failing test first."
+description: "Runs the full CSessionRouter job with tests first wherever a test is possible: failing tests by one worker, locked, a build by another, a fresh re-run beside the review. Use when the user says use TDD, test-driven, tests first, write the tests first, red green refactor, or fix this bug with a failing test first."
 argument-hint: "[task]"
 ---
 
@@ -10,7 +10,7 @@ This is the `route` job with one change: tests first is forced on every task whe
 
 ## How to run it
 
-Read `<base directory of this skill>/../route/SKILL.md` and follow it from start to finish, with the change below. Paths in it of the form `<base directory of this skill>/../../reference/<file>` resolve to the same reference folder from this skill's base directory, so read them from here.
+Read `<base directory of this skill>/../route/SKILL.md` and follow it from start to finish, with the change below. Paths in it of the form `<base directory of this skill>/../../reference/<file>` resolve to the same reference folder from this skill's base directory, so read them from here. After a summary of the conversation, read this file and `route/SKILL.md` again (memory.md, "Long jobs").
 
 If a reference file or a worker shell cannot be read because permission was refused, tell the user in one line which folder needs read access (the plugin folder, `<base directory of this skill>/../..`), and stop. Never carry on without the rules. A memory file in DATA that does not exist yet is normal on a first run and is not an error.
 

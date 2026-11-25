@@ -15,7 +15,7 @@ Choose it from the question.
 |---|---|---|
 | Quick | A simple fact with one authoritative source | 1, about 3 to 10 tool calls |
 | Standard | A comparison or a how-to across sources | 3 or 4, about 10 to 15 calls each |
-| Deep | A broad or high-stakes topic | 8 or more, in waves |
+| Deep | A broad or high-stakes topic | 8 to 12 in all, never more, in waves of six at most (routing.md, "Parallel rules") |
 
 Deep research is heavy: show the research plan and wait for the user's approval before any searcher starts. The research plan gives the angles, the number of searchers, each one's model and effort, and the sources they start from.
 

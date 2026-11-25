@@ -61,7 +61,7 @@ Show the plan to the user and save it as `PLAN.md` in the job folder (memory.md 
 
 ## Picking up a plan
 
-With no task given, `route` uses the plan made in this conversation if the user approved it here. Otherwise it uses the newest `PLAN.md` for this project in DATA whose status is `approved` or `started`. A `started` plan is a job part-way through: read its `PROGRESS.md` (memory.md) if it has one yet, check its `Done:` list and its open locks against the project (the last commits, the files), say in a line or two where the job stands, and go on with what is next. If the list and the project disagree, say how and ask. A `draft` is shown again and approval asked. If more than one plan could be meant, ask. If there is no plan to pick up, say so and ask what the user wants done. Do not invent a task.
+With no task given, `route` uses the plan made in this conversation if the user approved it here. Otherwise it looks for open plans in this project's job folder in DATA: a `PLAN.md` whose line 1 is `Status:` with `draft`, `approved` or `started`, found with one Grep (route/SKILL.md, section 1). With one, it uses it; with more than one, it lists them with their status and asks. A `started` plan is a job part-way through: read its `PROGRESS.md` (memory.md) if it has one yet, check its `Done:` list and its open locks against the project (the last commits, the files), say in a line or two where the job stands, and go on with what is next. If the list and the project disagree, say how and ask. A `draft` is shown again and approval asked. If more than one plan could be meant, ask. If there is no plan to pick up, say so and ask what the user wants done. Do not invent a task.
 
 ## Commits
 
@@ -73,7 +73,7 @@ With no task given, `route` uses the plan made in this conversation if the user 
 
 ## Light path
 
-One or two bounded tasks with nothing unclear. It skips only the plan dialog, the job files and the panel calls.
+One or two bounded tasks with nothing unclear, in a job that is not heavy: a heavy job (Heavy, above) never takes it, however few its tasks. It skips only the plan dialog, the job files and the panel calls.
 
 - It keeps the methods and the checks. A feature with logic that can be tested still goes tests first, with one worker for the tests and another for the build (methods.md), and the checks for its size still apply: the every-task checks, and the review for a feature. What counts as a feature or a small change: checks.md, "By size".
 - It closes with the report and the notices only: there is no plan status to set and no panel call.

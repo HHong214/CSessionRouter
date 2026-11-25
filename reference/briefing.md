@@ -44,7 +44,8 @@ Report: <anything beyond the standard report, or omit>
 - When two tasks need the same new piece, or one rule is enforced partly in each, both briefs name the one task that owns it; the other task waits for it, or is told to check that part last.
 - "Hand back when" holds the plan's re-planning points for this task: what the worker must not settle alone, such as a file outside its list that needs changing, a locked test that looks wrong, or a spec the code contradicts. The worker stops there with `NEEDS-DECISION:`.
 - "Budget" is for a task that could sprawl: a search, a hunt for a cause, a performance fix. About 10 tool calls for a lookup, 30 for a normal task, 60 for a large one; a task that needs more is two tasks.
-- When several briefs share a text (a contract, a style, a list of files), write it once to a file in the job folder (a scratch folder outside the project when the job has none) and name it under `read:`. Each brief then holds only what differs.
+- When several briefs share a text (a contract, a style, a list of files), write it once to a file in the job folder (in the job's scratch folder when the job has none: checks.md, "Running the checks") and name it under `read:`. Each brief then holds only what differs.
+- Every brief names its own subfolder of the job's scratch folder for what the worker writes that is not its result (checks.md, "Running the checks").
 - A review brief follows the rules in checks.md.
 - For a return, list the defects (checks.md) and reuse the task title as the `description`. The same worker or a fresh one: the last section below.
 

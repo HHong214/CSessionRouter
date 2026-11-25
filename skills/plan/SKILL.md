@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Plans a task of any kind (code, research, writing, analysis, reverse engineering) without carrying it out: recalls past lessons, reads what is needed, researches options when the approach is open, asks the questions that change the result, writes done criteria and a task plan with a model and effort level per task, saves the plan and stops for approval. Use when the user says plan this, make a plan first, how would you split this up, scope this out, or wants a plan to approve before any work starts."
+description: "Plans a job with the CSessionRouter router without carrying it out: done criteria and a task plan with a model and effort per task, saved and shown for approval. Use only when the user asks the router or CSessionRouter for a plan, as in plan this with the router, or runs /CSessionRouter:plan."
 argument-hint: "<task to plan>"
 ---
 

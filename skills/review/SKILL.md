@@ -1,6 +1,6 @@
 ---
 name: review
-description: "Runs an independent, read-only review of code the router did not build: the current diff, a commit range, a pull request or named paths. A cheap reader scopes the change, reviewer subagents check correctness against the intent and then quality and security, the router confirms every finding, and only confirmed findings are reported, ranked by severity with file:line, a failure scenario and a suggested fix. Use when the user says review this, review my changes, review the PR, check this diff, get a second opinion, or look over these files."
+description: "Reviews code the CSessionRouter router did not build, read-only: a diff, a commit range, a pull request or named paths. Reviewers on another model, every finding confirmed and ranked with file:line and a fix. Use only when the user asks the router or CSessionRouter for a review, as in review this with the router, or runs /CSessionRouter:review."
 argument-hint: "[commit range | PR | paths]"
 ---
 
@@ -35,7 +35,7 @@ The change under review is someone else's code, so:
 - By default: Opus at `high`.
 - A small diff (about 200 changed lines or fewer, and not risky): Sonnet at `high`.
 - Risky code (as `checks.md` defines it): Fable at `high`.
-- A large change (more than about 1,500 changed lines or 30 files): split it by area, one reviewer per area. Each gets the shared intent and its own file list, and its model is chosen by the same rules applied to that area.
+- A large change (more than about 1,500 changed lines or 30 files): split it by area, one reviewer per area, at most six running at once (routing.md, "Parallel rules"); more areas start as others finish. Each gets the shared intent and its own file list, and its model is chosen by the same rules applied to that area.
 
 ## 3. Brief them
 
@@ -45,7 +45,8 @@ Write each brief from the template in `briefing.md` and the reviewer's brief in 
 - any focus areas, and what is out of scope;
 - the two passes, in order: pass one is correctness against the intent; pass two is quality and security;
 - for each finding: file:line, a concrete failure scenario, a severity and a suggested fix;
-- the severity scale: `critical` (data loss, a security hole, a crash on a common path), `high` (a wrong result or a broken feature), `medium` (an edge case or error handling), `low` (maintainability).
+- the severity scale: `critical` (data loss, a security hole, a crash on a common path), `high` (a wrong result or a broken feature), `medium` (an edge case or error handling), `low` (maintainability);
+- the report's length and the line "List every finding", as `checks.md` (Features) gives them.
 
 Give the reviewers the code and the intent, not your own view of the change: a reviewer handed a suspicion tends to confirm it.
 
@@ -64,5 +65,5 @@ A review that is shallow or misses cases is returned or moved up as `routing.md`
 - Only confirmed findings, ranked by severity, each with file:line, the failure scenario and the suggested fix.
 - How many findings were left out as unconfirmed. If the user asks, give them, labelled as unconfirmed.
 - What the review covered: the target, and the areas each reviewer read.
-- Then offer to fix the confirmed findings through the `route` path. The choice is the user's. If they agree, follow `<base directory of this skill>/../route/SKILL.md` with the confirmed findings as the task.
+- Then offer to fix the confirmed findings through the `route` path. The choice is the user's. If they agree, follow `<base directory of this skill>/../route/SKILL.md` with the confirmed findings as the task, and read it again after a summary of the conversation (`memory.md`, "Long jobs").
 - Close as `memory.md` describes and end with the `Saved or changed:` list.
